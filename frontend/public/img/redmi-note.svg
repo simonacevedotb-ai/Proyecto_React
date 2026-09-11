@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Xiaomi Redmi Note 13 visto por detrás, con módulo de cámara de 108 MP">
+  <title>Xiaomi Redmi Note 13</title>
+
+  <defs>
+    <radialGradient id="rn-fondo" cx="50%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#f4f7fa"/>
+      <stop offset="100%" stop-color="#dce4ed"/>
+    </radialGradient>
+    <linearGradient id="rn-tapa" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#1d4f6b"/>
+      <stop offset="38%" stop-color="#123a52"/>
+      <stop offset="72%" stop-color="#0e2a3d"/>
+      <stop offset="100%" stop-color="#1a2740"/>
+    </linearGradient>
+    <linearGradient id="rn-marco" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5f6a78"/>
+      <stop offset="50%" stop-color="#2a313b"/>
+      <stop offset="100%" stop-color="#4c5563"/>
+    </linearGradient>
+    <linearGradient id="rn-brillo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.24"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="rn-lente" cx="35%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#3b4a5e"/>
+      <stop offset="55%" stop-color="#10161f"/>
+      <stop offset="100%" stop-color="#05080c"/>
+    </radialGradient>
+    <filter id="rn-sombra" x="-30%" y="-20%" width="160%" height="150%">
+      <feDropShadow dx="0" dy="26" stdDeviation="26" flood-color="#101828" flood-opacity="0.30"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="800" fill="url(#rn-fondo)"/>
+  <ellipse cx="400" cy="712" rx="200" ry="26" fill="#1e293b" opacity="0.16"/>
+
+  <!-- Cuerpo del teléfono, visto por detrás -->
+  <g filter="url(#rn-sombra)">
+    <rect x="246" y="126" width="308" height="580" rx="36" fill="url(#rn-marco)"/>
+    <rect x="254" y="134" width="292" height="564" rx="30" fill="url(#rn-tapa)"/>
+    <rect x="254" y="134" width="292" height="564" rx="30" fill="url(#rn-brillo)"/>
+
+    <!-- Módulo de cámara circular, rasgo del Redmi Note -->
+    <circle cx="342" cy="250" r="88" fill="#0a1119" opacity="0.55"/>
+    <circle cx="342" cy="250" r="80" fill="#0d151f"/>
+
+    <!-- Lente principal de 108 MP -->
+    <circle cx="342" cy="222" r="38" fill="#161e2a"/>
+    <circle cx="342" cy="222" r="31" fill="url(#rn-lente)"/>
+    <circle cx="342" cy="222" r="15" fill="#0a1520"/>
+    <circle cx="332" cy="211" r="6" fill="#7fd6ee" opacity="0.55"/>
+
+    <!-- Lentes secundarios -->
+    <circle cx="308" cy="292" r="20" fill="#161e2a"/>
+    <circle cx="308" cy="292" r="15" fill="url(#rn-lente)"/>
+    <circle cx="303" cy="287" r="3.5" fill="#7fd6ee" opacity="0.45"/>
+
+    <circle cx="368" cy="296" r="14" fill="#161e2a"/>
+    <circle cx="368" cy="296" r="10" fill="url(#rn-lente)"/>
+
+    <!-- Flash -->
+    <circle cx="396" cy="256" r="9" fill="#fde68a" opacity="0.9"/>
+    <circle cx="396" cy="256" r="16" fill="#fde68a" opacity="0.16"/>
+
+    <!-- Texto de la cámara -->
+    <text x="342" y="352" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+          font-size="15" font-weight="700" fill="#94a3b8" letter-spacing="2">108 MP</text>
+
+    <!-- Marca en la parte baja -->
+    <text x="300" y="646" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+          font-size="21" font-weight="700" fill="#ffffff" opacity="0.55" letter-spacing="3">Redmi</text>
+
+    <!-- Botones laterales -->
+    <rect x="554" y="252" width="5" height="46" rx="2.5" fill="#6b7480"/>
+    <rect x="554" y="318" width="5" height="80" rx="2.5" fill="#6b7480"/>
+  </g>
+
+  <!-- Distintivo de batería -->
+  <g transform="translate(596 596)">
+    <circle cx="0" cy="0" r="52" fill="#ffffff" opacity="0.75"/>
+    <circle cx="0" cy="0" r="52" fill="none" stroke="#22d3ee" stroke-width="3" opacity="0.6"/>
+    <rect x="-16" y="-16" width="32" height="24" rx="5" fill="none" stroke="#0891b2" stroke-width="3"/>
+    <rect x="-12" y="-12" width="24" height="16" rx="2" fill="#0891b2"/>
+    <rect x="16" y="-9" width="4" height="10" rx="2" fill="#0891b2"/>
+    <text x="0" y="30" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+          font-size="15" font-weight="700" fill="#0e7490">5000 mAh</text>
+  </g>
+
+  <text x="400" y="758" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="23" font-weight="700" fill="#475569" letter-spacing="4">XIAOMI</text>
+  <text x="400" y="784" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="15" font-weight="500" fill="#94a3b8" letter-spacing="2">Carga rápida de 67 W</text>
+</svg>

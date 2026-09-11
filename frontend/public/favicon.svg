@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PhoneStore">
+  <title>PhoneStore</title>
+  <!--
+    Versión simplificada de la marca para el favicon.
+    A 16 px no se distingue ni el teléfono ni las letras, así que se deja
+    la placa negra con el rayo rojo: el mismo par de colores del sitio.
+    Sin esquinas redondeadas, como el resto de la interfaz.
+  -->
+  <rect width="64" height="64" fill="#000000"/>
+  <rect x="2" y="2" width="60" height="60" fill="none"
+        stroke="#ff003d" stroke-opacity="0.55" stroke-width="3"/>
+
+  <path d="M37 10 L19 37 h11 L26 54 46 27 H34 z"
+        fill="#ff003d"/>
+</svg>

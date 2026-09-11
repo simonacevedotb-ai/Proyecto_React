@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------
+# Dependencias
+# ---------------------------------------------------------------
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ---------------------------------------------------------------
+# Compilaciones y cachés
+# ---------------------------------------------------------------
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------
+# Variables de entorno (contienen credenciales: nunca subir a git)
+# ---------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ---------------------------------------------------------------
+# Registros y archivos generados en tiempo de ejecución
+# ---------------------------------------------------------------
+*.log
+correos_enviados.log
+
+# ---------------------------------------------------------------
+# Sistema y editores
+# ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ---------------------------------------------------------------
+# Correos recibidos por el servidor SMTP de pruebas.
+# Son mensajes reales: llevan enlaces de recuperacion y direcciones
+# de correo de personas. No tienen por que acabar en el repositorio.
+# ---------------------------------------------------------------
+backend-fastapi/tests/correos_recibidos/
