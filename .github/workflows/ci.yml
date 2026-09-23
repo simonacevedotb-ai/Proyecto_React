@@ -72,38 +72,38 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: proyecto-react/backend-fastapi/requirements.txt
+          cache-dependency-path: backend-fastapi/requirements.txt
 
       - name: Instalar dependencias del backend
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Crear el esquema de la base de datos
         run: |
-          mysql -h 127.0.0.1 -P 3306 -uroot -proot < proyecto-react/database/phonestore.sql
+          mysql -h 127.0.0.1 -P 3306 -uroot -proot < database/phonestore.sql
           echo "Tablas creadas:"
           mysql -h 127.0.0.1 -P 3306 -uroot -proot -D phonestore -e "SHOW TABLES;"
 
       - name: Verificar que los módulos del backend importan
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         run: python -c "from app.main import app; print('Rutas registradas:', len(app.routes))"
 
       # Estas no necesitan la base de datos ni el servidor: usan SQLite y
       # TestClient. Si fallan, no tiene sentido seguir con el resto.
       - name: Ejecutar las pruebas unitarias (Pytest)
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         run: pytest
 
       - name: Crear el administrador y el catálogo de ejemplo
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         run: |
           python -m app.scripts.seed_admin
           python -m app.scripts.seed_demo
 
       - name: Levantar la API
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         run: |
           nohup python -m uvicorn app.main:app --host 127.0.0.1 --port 3000 > servidor.log 2>&1 &
           for i in $(seq 1 30); do
@@ -115,7 +115,7 @@ jobs:
           echo "La API no respondió a tiempo"; cat servidor.log; exit 1
 
       - name: Ejecutar las pruebas de la API
-        working-directory: proyecto-react/backend-fastapi
+        working-directory: backend-fastapi
         env:
           ADMIN_EMAIL_TEST: admin@phonestore.com
           ADMIN_PASSWORD_TEST: Admin1234
@@ -127,9 +127,9 @@ jobs:
         with:
           name: evidencia-pruebas-api
           path: |
-            proyecto-react/backend-fastapi/tests/evidencia_pruebas_api.md
-            proyecto-react/backend-fastapi/tests/evidencia_pruebas_api.json
-            proyecto-react/backend-fastapi/servidor.log
+            backend-fastapi/tests/evidencia_pruebas_api.md
+            backend-fastapi/tests/evidencia_pruebas_api.json
+            backend-fastapi/servidor.log
 
   # ===============================================================
   # 2. Frontend: linter y compilación
@@ -147,18 +147,18 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: proyecto-react/frontend/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Instalar dependencias
-        working-directory: proyecto-react/frontend
+        working-directory: frontend
         run: npm ci
 
       - name: Revisar el código con ESLint
-        working-directory: proyecto-react/frontend
+        working-directory: frontend
         run: npm run lint
 
       - name: Compilar para producción
-        working-directory: proyecto-react/frontend
+        working-directory: frontend
         env:
           VITE_API_URL: http://localhost:3000/api
         run: npm run build
@@ -167,7 +167,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: proyecto-react/frontend/dist
+          path: frontend/dist
           retention-days: 7
 
   # ===============================================================
@@ -196,7 +196,7 @@ jobs:
           patron='(JWT_SECRET|DB_PASSWORD|SMTP_PASSWORD|IA_API_KEY)[[:space:]]*=[[:space:]]*["'"'"'][^"'"'"']{6,}'
           hallazgos=$(grep -rInE "$patron" \
             --include='*.py' --include='*.js' --include='*.jsx' \
-            proyecto-react/backend-fastapi/app proyecto-react/frontend/src || true)
+            backend-fastapi/app frontend/src || true)
           if [ -n "$hallazgos" ]; then
             echo "Hay credenciales escritas directamente en el código:"
             echo "$hallazgos"
@@ -209,8 +209,8 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: proyecto-react/frontend/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Auditar dependencias del frontend
-        working-directory: proyecto-react/frontend
+        working-directory: frontend
         run: npm audit --audit-level=high || echo "Revisar el informe de npm audit"
