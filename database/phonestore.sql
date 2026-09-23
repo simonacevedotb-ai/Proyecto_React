@@ -682,6 +682,19 @@ SELECT * FROM (
 ) AS semilla
 WHERE NOT EXISTS (SELECT 1 FROM productos);
 
+-- Fotos de los productos de ejemplo. Los archivos ya existen en
+-- frontend/public/img/; esto solo faltaba conectarlos. Va aparte del
+-- INSERT (que solo corre una vez) para que también corrija bases que ya
+-- tenían estos productos sin imagen.
+UPDATE productos SET imagen_url = '/img/iphone-17.webp'      WHERE nombre = 'iPhone 17'               AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/iphone-15-pro.jpg'   WHERE nombre = 'iPhone 15 Pro'            AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/galaxy-s24.jpg'      WHERE nombre = 'Galaxy S24 Ultra'         AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/redmi-note.svg'      WHERE nombre = 'Xiaomi Redmi Note 13'     AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/airpods-pro.jpg'     WHERE nombre = 'AirPods Pro 2'            AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/galaxy-watch.jpg'    WHERE nombre = 'Galaxy Watch 6'           AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/cargador-gan.jpg'    WHERE nombre = 'Cargador rápido 65W GaN'  AND (imagen_url IS NULL OR imagen_url = '');
+UPDATE productos SET imagen_url = '/img/ipad-10.jpg'         WHERE nombre = 'iPad 10ma generación'     AND (imagen_url IS NULL OR imagen_url = '');
+
 -- Servicios de ejemplo (solo si la tabla está vacía)
 INSERT INTO servicios (nombre, descripcion, precio, duracion, icono, estado)
 SELECT * FROM (
