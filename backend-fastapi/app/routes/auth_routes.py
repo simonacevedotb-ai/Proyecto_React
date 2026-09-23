@@ -4,8 +4,9 @@
 
 import os
 from datetime import datetime
+from typing import Optional
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from sqlalchemy.orm import Session, joinedload
 
 from app.auth import (
@@ -31,6 +32,7 @@ from app.mailer import (
     correo_recuperacion,
     correo_verificacion,
     enviar_correo,
+    enviar_en_segundo_plano,
 )
 from app.models import CodigoVerificacion, PasswordReset, Usuario
 from app.schemas import (
@@ -103,8 +105,15 @@ def _invalidar_codigos(db: Session, id_usuario: int, tipo: str):
     ).update({"usado": True})
 
 
-def _enviar_verificacion_correo(db: Session, usuario: Usuario) -> bool:
-    """Genera el enlace de confirmación y lo manda por correo."""
+def _enviar_verificacion_correo(
+    db: Session, usuario: Usuario, tareas: Optional[BackgroundTasks] = None
+) -> bool:
+    """Genera el enlace de confirmación y lo manda por correo.
+
+    Con `tareas` el correo sale en segundo plano, después de responder;
+    sin ellas se envía en el acto (lo usa el reenvío manual, donde el
+    usuario sí está esperando la confirmación en pantalla).
+    """
     _invalidar_codigos(db, usuario.id_usuario, "correo")
 
     token_plano, token_hash, expira = generar_token_verificacion()
@@ -122,6 +131,8 @@ def _enviar_verificacion_correo(db: Session, usuario: Usuario) -> bool:
     asunto, cuerpo, html = correo_verificacion(
         usuario.nombre, enlace, VERIFICACION_TTL_MIN // 60
     )
+    if tareas is not None:
+        return enviar_en_segundo_plano(tareas, usuario.email, asunto, cuerpo, html)
     return enviar_correo(usuario.email, asunto, cuerpo, html)
 
 
@@ -176,7 +187,11 @@ def _sesion_iniciada(usuario: Usuario) -> dict:
 # Registro e inicio de sesión
 # ---------------------------------------------------------------
 @router.post("/register", status_code=201, dependencies=[Depends(limite_registro)])
-def register(body: UsuarioRegistro, db: Session = Depends(get_db)):
+def register(
+    body: UsuarioRegistro,
+    tareas: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     # 1) Pydantic ya garantizó tipos y que ningún campo llegue vacío.
     # 2) Reglas de negocio adicionales (formato, longitudes, regex).
     datos = body.model_dump()
@@ -219,7 +234,7 @@ def register(body: UsuarioRegistro, db: Session = Depends(get_db)):
     # Correo de confirmacion de la cuenta. La sesion se entrega igual para
     # no dejar al usuario fuera; lo que queda pendiente es la marca
     # `email_verificado`, que el frontend muestra hasta que la confirme.
-    enviado = _enviar_verificacion_correo(db, nuevo)
+    enviado = _enviar_verificacion_correo(db, nuevo, tareas)
 
     respuesta = _sesion_iniciada(nuevo)
     respuesta["message"] = (
@@ -500,7 +515,11 @@ def _aplicar_password_nueva(db: Session, usuario, registro, password: str):
 
 
 @router.post("/recuperar-password", dependencies=[Depends(limite_reset)])
-def recuperar_password(body: RecuperarPasswordRequest, db: Session = Depends(get_db)):
+def recuperar_password(
+    body: RecuperarPasswordRequest,
+    tareas: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     """Genera un token de un solo uso y lo envía por correo.
 
     La respuesta es siempre la misma exista o no la cuenta, para no
@@ -534,7 +553,7 @@ def recuperar_password(body: RecuperarPasswordRequest, db: Session = Depends(get
         asunto, cuerpo, html = correo_recuperacion(
             usuario.nombre, enlace, RESET_TTL_MIN, codigo
         )
-        enviar_correo(usuario.email, asunto, cuerpo, html)
+        enviar_en_segundo_plano(tareas, usuario.email, asunto, cuerpo, html)
 
     return {
         "ok": True,

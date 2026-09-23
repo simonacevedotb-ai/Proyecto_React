@@ -123,8 +123,8 @@ def main():
     )
     verificar(
         "Rechaza un registro con todos los campos inválidos",
-        "POST", "/api/auth/register", 400, status, data,
-        "El backend valida aunque el Frontend no lo haga",
+        "POST", "/api/auth/register", 422, status, data,
+        "El esquema Pydantic rechaza los campos mal formados",
     )
 
     status, data = peticion(
@@ -270,7 +270,7 @@ def main():
         "nombre": "P", "marca": "M", "precio": -100, "stock": -5,
     }, token=token_admin)
     verificar("Rechaza un producto con datos inválidos", "POST", "/api/productos",
-              400, status, data, "Precio negativo y nombre muy corto")
+              422, status, data, "Precio negativo y nombre muy corto")
 
     status, data = peticion("POST", "/productos", {
         "nombre": f"Producto Test {sufijo}",
@@ -369,7 +369,7 @@ def main():
         "items": [{"id_producto": id_producto, "cantidad": 99999}], **datos_envio,
     }, token=token_cliente)
     verificar("Rechaza cantidades fuera de rango en el carrito", "POST", "/api/ventas",
-              400, status, data, "El esquema limita la cantidad por línea")
+              422, status, data, "El esquema limita la cantidad por línea")
 
     status, data = peticion("POST", "/ventas", {
         "items": [{"id_producto": id_producto, "cantidad": stock_actual + 1}], **datos_envio,
@@ -496,7 +496,7 @@ def main():
         "descripcion": "corto",
     }, token=token_cliente)
     verificar("Valida los datos de la solicitud", "POST", "/api/solicitudes",
-              400, status, data)
+              422, status, data)
 
     status, data = peticion("GET", "/solicitudes/mis-solicitudes", token=token_cliente)
     verificar("El cliente ve sus solicitudes", "GET", "/api/solicitudes/mis-solicitudes",

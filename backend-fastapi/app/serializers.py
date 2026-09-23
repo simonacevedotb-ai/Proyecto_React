@@ -7,8 +7,12 @@ from decimal import Decimal
 
 from app.models import (
     Categoria,
+    Conversacion,
+    Factura,
+    MensajeChat,
     MensajeContacto,
     MovimientoInventario,
+    PQR,
     Producto,
     Servicio,
     SolicitudServicio,
@@ -214,3 +218,80 @@ def mensaje_dict(mensaje: MensajeContacto) -> dict:
         "estado": mensaje.estado,
         "creado_en": _fecha(mensaje.creado_en),
     }
+
+
+# ---------------------------------------------------------------
+# Facturación, PQR y asistente (quinto avance)
+# ---------------------------------------------------------------
+def factura_dict(factura: Factura, incluir_detalles: bool = False) -> dict:
+    data = {
+        "id_factura": factura.id_factura,
+        "numero": factura.numero,
+        "id_venta": factura.id_venta,
+        "codigo_venta": factura.venta.codigo if factura.venta else None,
+        "id_usuario": factura.id_usuario,
+        "cliente_nombre": factura.cliente_nombre,
+        "cliente_documento": factura.cliente_documento,
+        "cliente_email": factura.cliente_email,
+        "cliente_telefono": factura.cliente_telefono,
+        "cliente_direccion": factura.cliente_direccion,
+        "subtotal": _num(factura.subtotal),
+        "descuento": _num(factura.descuento),
+        "impuestos": _num(factura.impuestos),
+        "costo_envio": _num(factura.costo_envio),
+        "total": _num(factura.total),
+        "estado": factura.estado,
+        "observaciones": factura.observaciones,
+        "creado_en": _fecha(factura.creado_en),
+    }
+    if incluir_detalles and factura.venta:
+        data["detalles"] = [venta_detalle_dict(d) for d in factura.venta.detalles]
+        data["metodo_pago"] = factura.venta.metodo_pago
+    return data
+
+
+def pqr_dict(pqr: PQR) -> dict:
+    return {
+        "id_pqr": pqr.id_pqr,
+        "radicado": pqr.radicado,
+        "id_usuario": pqr.id_usuario,
+        "tipo": pqr.tipo,
+        "asunto": pqr.asunto,
+        "descripcion": pqr.descripcion,
+        "cliente_nombre": pqr.cliente_nombre,
+        "cliente_email": pqr.cliente_email,
+        "cliente_telefono": pqr.cliente_telefono,
+        "id_venta": pqr.id_venta,
+        "codigo_venta": pqr.venta.codigo if pqr.venta else None,
+        "estado": pqr.estado,
+        "respuesta": pqr.respuesta,
+        "responsable": (
+            f"{pqr.responsable.nombre} {pqr.responsable.apellido}"
+            if pqr.responsable
+            else None
+        ),
+        "respondida_en": _fecha(pqr.respondida_en),
+        "creado_en": _fecha(pqr.creado_en),
+        "actualizado_en": _fecha(pqr.actualizado_en),
+    }
+
+
+def mensaje_chat_dict(mensaje: MensajeChat) -> dict:
+    return {
+        "id_mensaje": mensaje.id_mensaje,
+        "autor": mensaje.autor,
+        "contenido": mensaje.contenido,
+        "creado_en": _fecha(mensaje.creado_en),
+    }
+
+
+def conversacion_dict(conversacion: Conversacion, incluir_mensajes: bool = True) -> dict:
+    data = {
+        "clave": conversacion.clave,
+        "titulo": conversacion.titulo,
+        "motor": conversacion.motor,
+        "creado_en": _fecha(conversacion.creado_en),
+    }
+    if incluir_mensajes:
+        data["mensajes"] = [mensaje_chat_dict(m) for m in conversacion.mensajes]
+    return data

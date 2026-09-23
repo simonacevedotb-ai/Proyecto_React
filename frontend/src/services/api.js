@@ -82,8 +82,54 @@ async function request(path, { method = "GET", body, auth = false, signal } = {}
   return data;
 }
 
+/**
+ * Descarga un archivo del backend (PDF, Excel) y lo guarda en el equipo.
+ *
+ * No pasa por `request` porque la respuesta no es JSON: llega como binario
+ * y hay que convertirla en un enlace temporal para que el navegador la
+ * baje con su nombre. El nombre lo propone el servidor en la cabecera
+ * Content-Disposition; si no viene, se usa el que se pase por parametro.
+ */
+async function descargar(path, nombrePorDefecto = "descarga") {
+  const token = getToken();
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  if (!response.ok) {
+    // Los errores si vienen en JSON: se leen para mostrar el motivo real
+    let mensaje = "No se pudo generar el archivo.";
+    try {
+      const datos = await response.json();
+      mensaje = datos.message || mensaje;
+    } catch {
+      // La respuesta no era JSON; se queda el mensaje generico.
+    }
+    const error = new Error(mensaje);
+    error.status = response.status;
+    throw error;
+  }
+
+  const cabecera = response.headers.get("content-disposition") || "";
+  const encontrado = cabecera.match(/filename="?([^"';]+)"?/i);
+  const nombre = encontrado ? encontrado[1] : nombrePorDefecto;
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = nombre;
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  URL.revokeObjectURL(url);
+
+  return nombre;
+}
+
 export const api = {
   get: (path, opts) => request(path, { ...opts, method: "GET" }),
+  descargar,
   post: (path, body, opts) => request(path, { ...opts, method: "POST", body }),
   put: (path, body, opts) => request(path, { ...opts, method: "PUT", body }),
   patch: (path, body, opts) => request(path, { ...opts, method: "PATCH", body }),

@@ -6,7 +6,9 @@ import { useAuth } from "../context/AuthContext";
 const SECCIONES = [
   { to: "/cliente", label: "Resumen", icono: "panel", exacto: true },
   { to: "/cliente/pedidos", label: "Mis pedidos", icono: "recibo" },
+  { to: "/cliente/facturas", label: "Mis facturas", icono: "recibo" },
   { to: "/cliente/solicitudes", label: "Mis solicitudes", icono: "herramienta" },
+  { to: "/cliente/pqr", label: "Mis PQR", icono: "chat" },
   { to: "/cliente/perfil", label: "Mi perfil", icono: "usuario" },
 ];
 

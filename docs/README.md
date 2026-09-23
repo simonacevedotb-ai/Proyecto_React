@@ -17,6 +17,11 @@
 | 5 | Evidencia de pruebas de APIs | [evidencia_pruebas_api.md](../backend-fastapi/tests/evidencia_pruebas_api.md) | 87 pruebas, 87 superadas |
 | 6 | Manual técnico | [05-manual-tecnico.md](05-manual-tecnico.md) | Instalación, arquitectura, API, seguridad y mantenimiento |
 | 7 | Correos y verificación en dos pasos | [06-correos-y-doble-factor.md](06-correos-y-doble-factor.md) | Correos del sistema, cómo comprobarlos y segundo paso del login |
+| 8 | Quinto avance | [07-quinto-avance.md](07-quinto-avance.md) | Facturación, reportes en PDF y Excel, PQR, asistente y despliegue |
+| 9 | Comparativa técnica | [08-comparativa-fastapi-drf.md](08-comparativa-fastapi-drf.md) | FastAPI frente a Django REST Framework, aplicado a este proyecto |
+| 10 | Matriz de validación técnica | [09-matriz-validacion-tecnica.md](09-matriz-validacion-tecnica.md) | Evidencia de los 24 criterios del instructor, uno por uno |
+| 11 | Normalización de la base de datos | [10-normalizacion-base-datos.md](10-normalizacion-base-datos.md) | 1FN, 2FN, 3FN y las dos excepciones documentadas (ventas y facturas) |
+| 12 | Conceptos y principios de POO | [11-conceptos-poo.md](11-conceptos-poo.md) | Objeto, clase, herencia y polimorfismo con código real del proyecto |
 
 ---
 
@@ -31,7 +36,8 @@
 | Revisar las medidas de seguridad | [Manual técnico § 8](05-manual-tecnico.md#8-seguridad) |
 | Configurar el envío de correos | [Correos § 4](06-correos-y-doble-factor.md#4-enviar-a-buzones-reales) |
 | Entender la verificación en dos pasos | [Correos § 5](06-correos-y-doble-factor.md#5-verificación-en-dos-pasos) |
-| Reproducir las pruebas | `cd backend-fastapi && python -m tests.pruebas_api` |
+| Reproducir las pruebas | `cd backend-fastapi && pytest` (unitarias) o `python -m tests.pruebas_api` (punta a punta) |
+| Comparar FastAPI con Django REST | [Comparativa](08-comparativa-fastapi-drf.md) |
 
 ---
 

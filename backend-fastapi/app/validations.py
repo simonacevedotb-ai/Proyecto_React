@@ -331,3 +331,14 @@ def validate_mensaje(body: dict):
         errors["mensaje"] = "El mensaje debe tener entre 10 y 1000 caracteres."
 
     return len(errors) == 0, errors
+
+
+def validate_email_simple(email: str) -> bool:
+    """Comprueba un correo suelto, fuera de un formulario completo.
+
+    Los validadores de arriba devuelven un diccionario de errores por
+    campo; esta versión es para cuando solo hace falta saber si una
+    dirección tiene forma de correo.
+    """
+    email = _s(email)
+    return bool(email) and len(email) <= 120 and bool(REGEX["email"].match(email))

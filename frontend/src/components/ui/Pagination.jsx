@@ -16,11 +16,21 @@ function construirPaginas(actual, total) {
   return paginas;
 }
 
+/**
+ * "1 facturas" suena mal. Las etiquetas que usa el panel forman el plural
+ * con -s (facturas, pedidos) o con -es (solicitudes), así que basta con
+ * quitar la terminación cuando hay un solo registro.
+ */
+function concordar(total, etiqueta) {
+  if (total !== 1) return etiqueta;
+  return etiqueta.endsWith("des") ? etiqueta.slice(0, -2) : etiqueta.replace(/s$/, "");
+}
+
 function Pagination({ pagina, totalPaginas, total, onCambiar, etiqueta = "registros" }) {
   if (!totalPaginas || totalPaginas <= 1) {
     return total ? (
       <p className="py-3 text-center text-xs text-white/40">
-        {total} {etiqueta} en total
+        {total} {concordar(total, etiqueta)} en total
       </p>
     ) : null;
   }

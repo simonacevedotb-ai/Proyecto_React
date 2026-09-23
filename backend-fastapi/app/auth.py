@@ -16,7 +16,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from dotenv import load_dotenv
-from fastapi import Depends, Header
+from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
@@ -93,20 +94,26 @@ def verificar_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
 
 
-def _extraer_token(authorization: Optional[str]):
-    authorization = authorization or ""
-    partes = authorization.split(" ")
-    if len(partes) == 2 and partes[0] == "Bearer" and partes[1]:
-        return partes[1]
-    return None
-
-
 # ---------------------------------------------------------------
 # Dependencias de protección de endpoints
+#
+# El esquema HTTPBearer no cambia cómo viaja el token (sigue siendo la
+# cabecera `Authorization: Bearer ...`), pero sí queda declarado en el
+# OpenAPI: por eso /docs muestra el botón "Authorize" y permite probar
+# las rutas protegidas sin herramientas externas.
 # ---------------------------------------------------------------
-def auth_required(authorization: Optional[str] = Header(default=None)) -> dict:
+esquema_bearer = HTTPBearer(
+    auto_error=False,
+    scheme_name="JWT",
+    description="Pega el token que devuelve POST /api/auth/login.",
+)
+
+
+def auth_required(
+    credenciales: Optional[HTTPAuthorizationCredentials] = Depends(esquema_bearer),
+) -> dict:
     """Exige un token JWT válido. Sin él, la petición no llega a la ruta."""
-    token = _extraer_token(authorization)
+    token = credenciales.credentials if credenciales else None
     if not token:
         raise AppError(401, "No autorizado. Debes iniciar sesión.")
     try:
@@ -115,9 +122,11 @@ def auth_required(authorization: Optional[str] = Header(default=None)) -> dict:
         raise AppError(401, "Token inválido o expirado. Inicia sesión nuevamente.")
 
 
-def auth_optional(authorization: Optional[str] = Header(default=None)) -> Optional[dict]:
+def auth_optional(
+    credenciales: Optional[HTTPAuthorizationCredentials] = Depends(esquema_bearer),
+) -> Optional[dict]:
     """No bloquea si falta o es inválido el token (rutas públicas enriquecidas)."""
-    token = _extraer_token(authorization)
+    token = credenciales.credentials if credenciales else None
     if not token:
         return None
     try:

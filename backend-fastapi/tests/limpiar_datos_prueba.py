@@ -7,9 +7,12 @@ la tienda real.
 
 Qué borra (y solo eso):
   - Usuarios con correo `cliente.test*@phonestore.com`, y sus pedidos.
+  - Las facturas, PQR y conversaciones del asistente de esos usuarios.
   - Productos, categorías y servicios cuyo nombre empieza por "* Test ".
   - Mensajes de contacto de "Visitante de prueba" y los del intento de XSS.
   - Solicitudes de servicio creadas por esos usuarios de prueba.
+  - Las charlas anónimas de la prueba del asistente, que empiezan con la
+    marca "(prueba automatizada)".
 
 Ejecutar desde backend-fastapi/ con el entorno virtual activado:
 
@@ -20,7 +23,10 @@ from sqlalchemy import or_
 
 from app.database import SessionLocal
 from app.models import (
+    PQR,
     Categoria,
+    Conversacion,
+    Factura,
     MensajeContacto,
     MovimientoInventario,
     Producto,
@@ -40,6 +46,9 @@ CORREOS_PRUEBA = [
 NOMBRES_PRUEBA = ["Producto Test %", "Categoria Test %", "Servicio Test %"]
 REMITENTES_PRUEBA = ["Visitante de prueba", "alert(1)"]
 CORREOS_MENSAJE_PRUEBA = ["visitante@example.com", "xss@example.com"]
+# prueba_quinto_avance.py abre la charla anónima con este texto; como la
+# conversación toma su título del primer mensaje, así se reconoce.
+MARCA_CHAT = "%(prueba automatizada)%"
 
 
 def limpiar():
@@ -47,6 +56,9 @@ def limpiar():
     borrados = {
         "usuarios": 0,
         "ventas": 0,
+        "facturas": 0,
+        "pqr": 0,
+        "charlas": 0,
         "solicitudes": 0,
         "productos": 0,
         "categorias": 0,
@@ -62,6 +74,17 @@ def limpiar():
         )
         ids_usuarios = [u.id_usuario for u in usuarios]
 
+        # Las charlas se buscan antes de borrar a sus dueños: al irse el
+        # usuario, la base pone id_usuario en NULL y ya no se reconocerían.
+        # Sus mensajes se van con ellas (cascade delete-orphan).
+        filtro_charlas = [Conversacion.titulo.like(MARCA_CHAT)]
+        if ids_usuarios:
+            filtro_charlas.append(Conversacion.id_usuario.in_(ids_usuarios))
+        charlas = db.query(Conversacion).filter(or_(*filtro_charlas)).all()
+        for c in charlas:
+            db.delete(c)
+        borrados["charlas"] = len(charlas)
+
         if ids_usuarios:
             solicitudes = (
                 db.query(SolicitudServicio)
@@ -73,6 +96,39 @@ def limpiar():
             borrados["solicitudes"] = len(solicitudes)
 
             ventas = db.query(Venta).filter(Venta.id_usuario.in_(ids_usuarios)).all()
+            ids_ventas = [v.id_venta for v in ventas]
+
+            # La factura va primero: la base no deja borrar una venta que ya
+            # se facturó (fk_factura_venta es RESTRICT, a propósito).
+            facturas = (
+                db.query(Factura)
+                .filter(
+                    or_(
+                        Factura.id_venta.in_(ids_ventas),
+                        Factura.id_usuario.in_(ids_usuarios),
+                    )
+                )
+                .all()
+            )
+            for f in facturas:
+                db.delete(f)
+            borrados["facturas"] = len(facturas)
+
+            casos = (
+                db.query(PQR)
+                .filter(
+                    or_(
+                        PQR.id_usuario.in_(ids_usuarios),
+                        *[PQR.cliente_email.like(p) for p in CORREOS_PRUEBA],
+                    )
+                )
+                .all()
+            )
+            for c in casos:
+                db.delete(c)
+            borrados["pqr"] = len(casos)
+            db.flush()
+
             for v in ventas:
                 db.query(MovimientoInventario).filter(
                     MovimientoInventario.id_venta == v.id_venta

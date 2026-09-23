@@ -17,18 +17,20 @@
     "prueba": "Rechaza un registro con todos los campos inválidos",
     "metodo": "POST",
     "endpoint": "/api/auth/register",
-    "status_esperado": "400",
-    "status_obtenido": 400,
+    "status_esperado": "422",
+    "status_obtenido": 422,
     "resultado": "OK",
-    "comentario": "El backend valida aunque el Frontend no lo haga",
+    "comentario": "El esquema Pydantic rechaza los campos mal formados",
     "respuesta": {
       "ok": false,
       "message": "Datos inválidos.",
       "errors": {
         "nombre": "Este campo debe tener al menos 2 caracteres.",
+        "tipoDocumento": "El tipo de documento debe ser uno de: CC, TI, CE, PA.",
         "numeroDocumento": "Este campo debe tener al menos 6 caracteres.",
         "direccion": "Este campo debe tener al menos 10 caracteres.",
         "telefono": "Este campo debe tener al menos 7 caracteres.",
+        "email": "Escribe un correo electrónico válido.",
         "password": "Este campo debe tener al menos 8 caracteres."
       }
     }
@@ -44,25 +46,25 @@
     "respuesta": {
       "ok": true,
       "message": "Registro exitoso. Te enviamos un correo para confirmar tu cuenta.",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTIzODc2MywiaWF0IjoxNzg5MTUyMzYzfQ.yYJrjzrDu81qUCPaI_mEAyoDoOekHqU6FdjApsqHMPw",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.0cZpvitOT-nCxwosaz2BxS3tlmc1R4Rcki31fUrrOKY",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Pruebas",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 45 # 12-34 Medellin",
         "telefono": "3001234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 3,
         "rol": "cliente",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:03"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:00"
       },
-      "verificacion_enviada": false
+      "verificacion_enviada": true
     }
   },
   {
@@ -145,23 +147,23 @@
     "respuesta": {
       "ok": true,
       "message": "Inicio de sesión exitoso.",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTIzODc2MywiaWF0IjoxNzg5MTUyMzYzfQ.yYJrjzrDu81qUCPaI_mEAyoDoOekHqU6FdjApsqHMPw",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.0cZpvitOT-nCxwosaz2BxS3tlmc1R4Rcki31fUrrOKY",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Pruebas",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 45 # 12-34 Medellin",
         "telefono": "3001234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 3,
         "rol": "cliente",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:03"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:00"
       }
     }
   },
@@ -176,21 +178,21 @@
     "respuesta": {
       "ok": true,
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Pruebas",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 45 # 12-34 Medellin",
         "telefono": "3001234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 3,
         "rol": "cliente",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:03"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:00"
       }
     }
   },
@@ -231,7 +233,7 @@
     "respuesta": {
       "ok": true,
       "message": "Inicio de sesión exitoso.",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJlbWFpbCI6InNpbW9uYWNldmVkb3RiQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpZF9yb2wiOjEsImV4cCI6MTc4OTIzODc2NCwiaWF0IjoxNzg5MTUyMzY0fQ.j2zX--wamxXhrXIu-XHhXtG7F3KuLdFN0OkMTmaXcuk",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJlbWFpbCI6InNpbW9uYWNldmVkb3RiQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpZF9yb2wiOjEsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.HT3Z_noYl6hXOVyJheviW7-12CbM49w9pL8za1lxEh8",
       "usuario": {
         "id_usuario": 1,
         "nombre": "Simon",
@@ -302,38 +304,89 @@
       "ok": true,
       "usuarios": [
         {
-          "id_usuario": 38,
+          "id_usuario": 58,
           "nombre": "Cliente",
           "apellido": "Pruebas",
           "tipo_documento": "CC",
-          "numero_documento": "189152363",
+          "numero_documento": "189759860",
           "direccion": "Calle 45 # 12-34 Medellin",
           "telefono": "3001234567",
-          "email": "cliente.test89152363@phonestore.com",
+          "email": "cliente.test89759860@phonestore.com",
           "email_verificado": false,
           "doble_factor": false,
           "estado": "activo",
           "id_rol": 3,
           "rol": "cliente",
-          "creado_en": "2026-09-11 13:46:03",
-          "actualizado_en": "2026-09-11 13:46:03"
+          "creado_en": "2026-09-18 14:31:00",
+          "actualizado_en": "2026-09-18 14:31:00"
         },
         {
-          "id_usuario": 37,
+          "id_usuario": 57,
+          "nombre": "Quinto",
+          "apellido": "Avance",
+          "tipo_documento": "CC",
+          "numero_documento": "551427121",
+          "direccion": "Calle 45 numero 12-34",
+          "telefono": "3140009988",
+          "email": "cliente.test.quinto142712@phonestore.com",
+          "email_verificado": false,
+          "doble_factor": false,
+          "estado": "activo",
+          "id_rol": 3,
+          "rol": "cliente",
+          "creado_en": "2026-09-18 14:27:12",
+          "actualizado_en": "2026-09-18 14:27:12"
+        },
+        {
+          "id_usuario": 56,
+          "nombre": "Correo",
+          "apellido": "Prueba",
+          "tipo_documento": "CC",
+          "numero_documento": "771427111",
+          "direccion": "Calle 45 numero 12-34",
+          "telefono": "3140000000",
+          "email": "cliente.correo142711@phonestore.com",
+          "email_verificado": true,
+          "doble_factor": true,
+          "estado": "activo",
+          "id_rol": 3,
+          "rol": "cliente",
+          "creado_en": "2026-09-18 14:27:11",
+          "actualizado_en": "2026-09-18 14:27:11"
+        },
+        {
+          "id_usuario": 55,
           "nombre": "Cliente",
           "apellido": "Perfil",
           "tipo_documento": "CC",
-          "numero_documento": "189152302",
+          "numero_documento": "189759627",
           "direccion": "Calle 10 # 20-30 Medellin",
           "telefono": "3021234567",
-          "email": "cliente.test89152302@phonestore.com",
+          "email": "cliente.test89759627@phonestore.com",
           "email_verificado": false,
           "doble_factor": false,
           "estado": "inactivo",
           "id_rol": 2,
           "rol": "empleado",
-          "creado_en": "2026-09-11 13:45:02",
-          "actualizado_en": "2026-09-11 13:45:04"
+          "creado_en": "2026-09-18 14:27:08",
+          "actualizado_en": "2026-09-18 14:27:10"
+        },
+        {
+          "id_usuario": 40,
+          "nombre": "jose",
+          "apellido": "Alvarez",
+          "tipo_documento": "CC",
+          "numero_documento": "12616133531",
+          "direccion": "cra115a#64cc04",
+          "telefono": "3147728502",
+          "email": "jhanm1728@gmail.com",
+          "email_verificado": false,
+          "doble_factor": false,
+          "estado": "activo",
+          "id_rol": 3,
+          "rol": "cliente",
+          "creado_en": "2026-09-14 13:00:58",
+          "actualizado_en": "2026-09-14 13:19:44"
         },
         {
           "id_usuario": 31,
@@ -367,7 +420,7 @@
           "id_rol": 3,
           "rol": "cliente",
           "creado_en": "2026-09-11 12:28:28",
-          "actualizado_en": "2026-09-11 12:28:28"
+          "actualizado_en": "2026-09-11 14:08:45"
         },
         {
           "id_usuario": 8,
@@ -419,47 +472,13 @@
           "rol": "cliente",
           "creado_en": "2026-08-26 13:29:03",
           "actualizado_en": "2026-08-26 13:29:03"
-        },
-        {
-          "id_usuario": 2,
-          "nombre": "zuri",
-          "apellido": "bravo",
-          "tipo_documento": "TI",
-          "numero_documento": "1015075578",
-          "direccion": "cra 1222",
-          "telefono": "3012661839",
-          "email": "zuriannebravoerazo4@gmail.com",
-          "email_verificado": false,
-          "doble_factor": false,
-          "estado": "activo",
-          "id_rol": 2,
-          "rol": "empleado",
-          "creado_en": "2026-08-25 19:28:20",
-          "actualizado_en": "2026-09-10 12:17:04"
-        },
-        {
-          "id_usuario": 1,
-          "nombre": "Simon",
-          "apellido": "Acevedo",
-          "tipo_documento": "CC",
-          "numero_documento": "1022004330",
-          "direccion": "Oficina principal",
-          "telefono": "3147728502",
-          "email": "simonacevedotb@gmail.com",
-          "email_verificado": false,
-          "doble_factor": false,
-          "estado": "activo",
-          "id_rol": 1,
-          "rol": "administrador",
-          "creado_en": "2026-08-25 19:18:19",
-          "actualizado_en": "2026-09-08 15:33:19"
         }
       ],
       "paginacion": {
         "pagina": 1,
         "limite": 10,
-        "total": 9,
-        "total_paginas": 1
+        "total": 12,
+        "total_paginas": 2
       }
     }
   },
@@ -539,13 +558,13 @@
       "ok": true,
       "message": "Categoría creada.",
       "categoria": {
-        "id_categoria": 38,
-        "nombre": "Categoria Test 89152363",
-        "slug": "categoria-test-89152363",
+        "id_categoria": 49,
+        "nombre": "Categoria Test 89759860",
+        "slug": "categoria-test-89759860",
         "descripcion": "Categoría creada por las pruebas automatizadas",
         "icono": "phone",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
         "total_productos": 0
       }
     }
@@ -553,7 +572,7 @@
   {
     "prueba": "Edita la categoría",
     "metodo": "PUT",
-    "endpoint": "/api/categorias/38",
+    "endpoint": "/api/categorias/49",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -562,13 +581,13 @@
       "ok": true,
       "message": "Categoría actualizada.",
       "categoria": {
-        "id_categoria": 38,
-        "nombre": "Categoria Test 89152363 editada",
-        "slug": "categoria-test-89152363-editada",
+        "id_categoria": 49,
+        "nombre": "Categoria Test 89759860 editada",
+        "slug": "categoria-test-89759860-editada",
         "descripcion": "Descripción actualizada",
         "icono": "phone",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
         "total_productos": 0
       }
     }
@@ -576,7 +595,7 @@
   {
     "prueba": "Cambia el estado de la categoría",
     "metodo": "PATCH",
-    "endpoint": "/api/categorias/38/estado",
+    "endpoint": "/api/categorias/49/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -585,13 +604,13 @@
       "ok": true,
       "message": "Categoría marcada como inactivo.",
       "categoria": {
-        "id_categoria": 38,
-        "nombre": "Categoria Test 89152363 editada",
-        "slug": "categoria-test-89152363-editada",
+        "id_categoria": 49,
+        "nombre": "Categoria Test 89759860 editada",
+        "slug": "categoria-test-89759860-editada",
         "descripcion": "Descripción actualizada",
         "icono": "phone",
         "estado": "inactivo",
-        "creado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
         "total_productos": 0
       }
     }
@@ -616,14 +635,14 @@
           "descripcion": "Pantalla Liquid Retina de 10.9\", chip A14 Bionic y 64 GB.",
           "precio": 2100000.0,
           "precio_anterior": null,
-          "stock": 6,
+          "stock": 1,
           "stock_minimo": 5,
-          "estado_stock": "disponible",
+          "estado_stock": "bajo",
           "destacado": false,
           "imagen_url": "/img/ipad-10.jpg",
           "estado": "activo",
           "creado_en": "2026-09-08 19:10:30",
-          "actualizado_en": "2026-09-10 12:57:53"
+          "actualizado_en": "2026-09-18 12:29:01"
         },
         {
           "id_producto": 11,
@@ -634,14 +653,14 @@
           "descripcion": "Tres puertos, tecnología GaN y protección contra sobrecarga.",
           "precio": 180000.0,
           "precio_anterior": 220000.0,
-          "stock": 39,
+          "stock": 32,
           "stock_minimo": 5,
           "estado_stock": "disponible",
           "destacado": false,
           "imagen_url": "/img/cargador-gan.jpg",
           "estado": "activo",
           "creado_en": "2026-09-08 19:10:30",
-          "actualizado_en": "2026-09-10 12:57:53"
+          "actualizado_en": "2026-09-18 14:27:13"
         },
         {
           "id_producto": 10,
@@ -652,14 +671,14 @@
           "descripcion": "Monitoreo de sueño, ritmo cardiaco y GPS integrado.",
           "precio": 1100000.0,
           "precio_anterior": null,
-          "stock": 11,
+          "stock": 9,
           "stock_minimo": 5,
           "estado_stock": "disponible",
           "destacado": false,
           "imagen_url": "/img/galaxy-watch.jpg",
           "estado": "activo",
           "creado_en": "2026-09-08 19:10:30",
-          "actualizado_en": "2026-09-10 12:57:53"
+          "actualizado_en": "2026-09-18 14:27:13"
         },
         {
           "id_producto": 9,
@@ -784,8 +803,8 @@
     "prueba": "Rechaza un producto con datos inválidos",
     "metodo": "POST",
     "endpoint": "/api/productos",
-    "status_esperado": "400",
-    "status_obtenido": 400,
+    "status_esperado": "422",
+    "status_obtenido": 422,
     "resultado": "OK",
     "comentario": "Precio negativo y nombre muy corto",
     "respuesta": {
@@ -811,11 +830,11 @@
       "ok": true,
       "message": "Producto creado.",
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Producto creado por las pruebas automatizadas",
         "precio": 500000.0,
         "precio_anterior": null,
@@ -825,15 +844,15 @@
         "destacado": false,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
   {
     "prueba": "Consulta un producto por id",
     "metodo": "GET",
-    "endpoint": "/api/productos/32",
+    "endpoint": "/api/productos/38",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -841,11 +860,11 @@
     "respuesta": {
       "ok": true,
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Producto creado por las pruebas automatizadas",
         "precio": 500000.0,
         "precio_anterior": null,
@@ -855,8 +874,8 @@
         "destacado": false,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       },
       "relacionados": []
     }
@@ -864,7 +883,7 @@
   {
     "prueba": "Edita el producto",
     "metodo": "PUT",
-    "endpoint": "/api/productos/32",
+    "endpoint": "/api/productos/38",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -873,11 +892,11 @@
       "ok": true,
       "message": "Producto actualizado.",
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363 editado",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860 editado",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Descripción actualizada por las pruebas",
         "precio": 450000.0,
         "precio_anterior": null,
@@ -887,15 +906,15 @@
         "destacado": true,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
   {
     "prueba": "Desactiva el producto",
     "metodo": "PATCH",
-    "endpoint": "/api/productos/32/estado",
+    "endpoint": "/api/productos/38/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -904,11 +923,11 @@
       "ok": true,
       "message": "Producto marcado como inactivo.",
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363 editado",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860 editado",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Descripción actualizada por las pruebas",
         "precio": 450000.0,
         "precio_anterior": null,
@@ -918,15 +937,15 @@
         "destacado": true,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "inactivo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
   {
     "prueba": "Reactiva el producto",
     "metodo": "PATCH",
-    "endpoint": "/api/productos/32/estado",
+    "endpoint": "/api/productos/38/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -935,11 +954,11 @@
       "ok": true,
       "message": "Producto marcado como activo.",
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363 editado",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860 editado",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Descripción actualizada por las pruebas",
         "precio": 450000.0,
         "precio_anterior": null,
@@ -949,8 +968,8 @@
         "destacado": true,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -1000,9 +1019,9 @@
       "ok": true,
       "message": "Inventario actualizado: 10 → 15 unidades.",
       "movimiento": {
-        "id_movimiento": 81,
-        "id_producto": 32,
-        "producto": "Producto Test 89152363 editado",
+        "id_movimiento": 121,
+        "id_producto": 38,
+        "producto": "Producto Test 89759860 editado",
         "tipo": "entrada",
         "cantidad": 5,
         "stock_anterior": 10,
@@ -1011,14 +1030,14 @@
         "id_venta": null,
         "id_usuario": 1,
         "usuario": "Simon Acevedo",
-        "creado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01"
       },
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363 editado",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860 editado",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Descripción actualizada por las pruebas",
         "precio": 450000.0,
         "precio_anterior": null,
@@ -1028,8 +1047,8 @@
         "destacado": true,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -1061,9 +1080,9 @@
       "ok": true,
       "movimientos": [
         {
-          "id_movimiento": 81,
-          "id_producto": 32,
-          "producto": "Producto Test 89152363 editado",
+          "id_movimiento": 121,
+          "id_producto": 38,
+          "producto": "Producto Test 89759860 editado",
           "tipo": "entrada",
           "cantidad": 5,
           "stock_anterior": 10,
@@ -1072,12 +1091,12 @@
           "id_venta": null,
           "id_usuario": 1,
           "usuario": "Simon Acevedo",
-          "creado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_movimiento": 80,
-          "id_producto": 32,
-          "producto": "Producto Test 89152363 editado",
+          "id_movimiento": 120,
+          "id_producto": 38,
+          "producto": "Producto Test 89759860 editado",
           "tipo": "entrada",
           "cantidad": 10,
           "stock_anterior": 0,
@@ -1086,7 +1105,7 @@
           "id_venta": null,
           "id_usuario": 1,
           "usuario": "Simon Acevedo",
-          "creado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01"
         }
       ],
       "paginacion": {
@@ -1108,10 +1127,29 @@
     "respuesta": {
       "ok": true,
       "agotados": [],
-      "stock_bajo": [],
+      "stock_bajo": [
+        {
+          "id_producto": 12,
+          "nombre": "iPad 10ma generación",
+          "marca": "Apple",
+          "id_categoria": 5,
+          "categoria": "Tablets",
+          "descripcion": "Pantalla Liquid Retina de 10.9\", chip A14 Bionic y 64 GB.",
+          "precio": 2100000.0,
+          "precio_anterior": null,
+          "stock": 1,
+          "stock_minimo": 5,
+          "estado_stock": "bajo",
+          "destacado": false,
+          "imagen_url": "/img/ipad-10.jpg",
+          "estado": "activo",
+          "creado_en": "2026-09-08 19:10:30",
+          "actualizado_en": "2026-09-18 12:29:01"
+        }
+      ],
       "totales": {
         "agotados": 0,
-        "stock_bajo": 0
+        "stock_bajo": 1
       }
     }
   },
@@ -1132,8 +1170,8 @@
     "prueba": "Rechaza cantidades fuera de rango en el carrito",
     "metodo": "POST",
     "endpoint": "/api/ventas",
-    "status_esperado": "400",
-    "status_obtenido": 400,
+    "status_esperado": "422",
+    "status_obtenido": 422,
     "resultado": "OK",
     "comentario": "El esquema limita la cantidad por línea",
     "respuesta": {
@@ -1156,7 +1194,7 @@
       "ok": false,
       "message": "Algunos productos ya no están disponibles en la cantidad solicitada.",
       "errors": {
-        "32": "Solo quedan 15 unidad(es) de \"Producto Test 89152363 editado\"."
+        "38": "Solo quedan 15 unidad(es) de \"Producto Test 89759860 editado\"."
       }
     }
   },
@@ -1170,15 +1208,15 @@
     "comentario": "El backend recalcula todo con el precio real de la base de datos",
     "respuesta": {
       "ok": true,
-      "message": "¡Pedido PS-20260911-3687 registrado correctamente!",
+      "message": "¡Pedido PS-20260918-1153 registrado correctamente!",
       "venta": {
-        "id_venta": 21,
-        "codigo": "PS-20260911-3687",
-        "id_usuario": 38,
+        "id_venta": 36,
+        "codigo": "PS-20260918-1153",
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
-        "cliente_documento": "189152363",
+        "cliente_documento": "189759860",
         "direccion_envio": "Calle 45 # 12-34 Medellin",
         "ciudad": "Medellin",
         "notas": "Pedido generado por las pruebas automatizadas",
@@ -1188,13 +1226,13 @@
         "total": 915000.0,
         "total_articulos": 2,
         "estado": "pendiente",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01",
         "detalles": [
           {
-            "id_detalle": 22,
-            "id_producto": 32,
-            "nombre_producto": "Producto Test 89152363 editado",
+            "id_detalle": 44,
+            "id_producto": 38,
+            "nombre_producto": "Producto Test 89759860 editado",
             "marca_producto": "MarcaTest",
             "precio_unitario": 450000.0,
             "cantidad": 2,
@@ -1220,7 +1258,7 @@
   {
     "prueba": "El stock se descontó automáticamente tras la venta",
     "metodo": "GET",
-    "endpoint": "/api/productos/32",
+    "endpoint": "/api/productos/38",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1242,13 +1280,13 @@
       "ok": true,
       "ventas": [
         {
-          "id_venta": 21,
-          "codigo": "PS-20260911-3687",
-          "id_usuario": 38,
+          "id_venta": 36,
+          "codigo": "PS-20260918-1153",
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152363",
+          "cliente_documento": "189759860",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -1258,13 +1296,13 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "pendiente",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04",
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01",
           "detalles": [
             {
-              "id_detalle": 22,
-              "id_producto": 32,
-              "nombre_producto": "Producto Test 89152363 editado",
+              "id_detalle": 44,
+              "id_producto": 38,
+              "nombre_producto": "Producto Test 89759860 editado",
               "marca_producto": "MarcaTest",
               "precio_unitario": 450000.0,
               "cantidad": 2,
@@ -1300,13 +1338,13 @@
       "ok": true,
       "ventas": [
         {
-          "id_venta": 21,
-          "codigo": "PS-20260911-3687",
-          "id_usuario": 38,
+          "id_venta": 36,
+          "codigo": "PS-20260918-1153",
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152363",
+          "cliente_documento": "189759860",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -1316,13 +1354,13 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "pendiente",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04",
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01",
           "detalles": [
             {
-              "id_detalle": 22,
-              "id_producto": 32,
-              "nombre_producto": "Producto Test 89152363 editado",
+              "id_detalle": 44,
+              "id_producto": 38,
+              "nombre_producto": "Producto Test 89759860 editado",
               "marca_producto": "MarcaTest",
               "precio_unitario": 450000.0,
               "cantidad": 2,
@@ -1331,58 +1369,36 @@
           ]
         },
         {
-          "id_venta": 20,
-          "codigo": "PS-20260911-8617",
-          "id_usuario": 37,
-          "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152302@phonestore.com",
-          "cliente_telefono": "3001234567",
-          "cliente_documento": "189152302",
-          "direccion_envio": "Calle 45 # 12-34 Medellin",
+          "id_venta": 35,
+          "codigo": "PS-20260918-7950",
+          "id_usuario": 57,
+          "cliente_nombre": "Quinto Avance",
+          "cliente_email": "cliente.test.quinto142712@phonestore.com",
+          "cliente_telefono": "3140009988",
+          "cliente_documento": "551427121",
+          "direccion_envio": "Calle 45 numero 12-34",
           "ciudad": "Medellin",
-          "notas": "Pedido generado por las pruebas automatizadas",
-          "metodo_pago": "contraentrega",
-          "subtotal": 900000.0,
-          "costo_envio": 15000.0,
-          "total": 915000.0,
-          "total_articulos": 2,
-          "estado": "cancelada",
-          "creado_en": "2026-09-11 13:45:03",
-          "actualizado_en": "2026-09-11 13:45:03",
-          "detalles": [
-            {
-              "id_detalle": 21,
-              "id_producto": 31,
-              "nombre_producto": "Producto Test 89152302 editado",
-              "marca_producto": "MarcaTest",
-              "precio_unitario": 450000.0,
-              "cantidad": 2,
-              "subtotal": 900000.0
-            }
-          ]
-        },
-        {
-          "id_venta": 9,
-          "codigo": "PS-20260910-4740",
-          "id_usuario": 1,
-          "cliente_nombre": "Simon Acevedo",
-          "cliente_email": "simonacevedotb@gmail.com",
-          "cliente_telefono": "3147728502",
-          "cliente_documento": "1022004330",
-          "direccion_envio": "Oficina principal",
-          "ciudad": "MEDELLIN (ANTIOQUIA)",
           "notas": null,
-          "metodo_pago": "transferencia",
-          "subtotal": 1100000.0,
+          "metodo_pago": "contraentrega",
+          "subtotal": 1280000.0,
           "costo_envio": 15000.0,
-          "total": 1115000.0,
-          "total_articulos": 1,
+          "total": 1295000.0,
+          "total_articulos": 2,
           "estado": "pendiente",
-          "creado_en": "2026-09-10 12:20:58",
-          "actualizado_en": "2026-09-10 12:20:58",
+          "creado_en": "2026-09-18 14:27:13",
+          "actualizado_en": "2026-09-18 14:27:13",
           "detalles": [
             {
-              "id_detalle": 10,
+              "id_detalle": 42,
+              "id_producto": 11,
+              "nombre_producto": "Cargador rápido 65W GaN",
+              "marca_producto": "Ugreen",
+              "precio_unitario": 180000.0,
+              "cantidad": 1,
+              "subtotal": 180000.0
+            },
+            {
+              "id_detalle": 43,
               "id_producto": 10,
               "nombre_producto": "Galaxy Watch 6",
               "marca_producto": "Samsung",
@@ -1393,8 +1409,70 @@
           ]
         },
         {
-          "id_venta": 8,
-          "codigo": "PS-20260910-9311",
+          "id_venta": 34,
+          "codigo": "PS-20260918-8744",
+          "id_usuario": 55,
+          "cliente_nombre": "Cliente Pruebas",
+          "cliente_email": "cliente.test89759627@phonestore.com",
+          "cliente_telefono": "3001234567",
+          "cliente_documento": "189759627",
+          "direccion_envio": "Calle 45 # 12-34 Medellin",
+          "ciudad": "Medellin",
+          "notas": "Pedido generado por las pruebas automatizadas",
+          "metodo_pago": "contraentrega",
+          "subtotal": 900000.0,
+          "costo_envio": 15000.0,
+          "total": 915000.0,
+          "total_articulos": 2,
+          "estado": "cancelada",
+          "creado_en": "2026-09-18 14:27:09",
+          "actualizado_en": "2026-09-18 14:27:09",
+          "detalles": [
+            {
+              "id_detalle": 41,
+              "id_producto": 37,
+              "nombre_producto": "Producto Test 89759627 editado",
+              "marca_producto": "MarcaTest",
+              "precio_unitario": 450000.0,
+              "cantidad": 2,
+              "subtotal": 900000.0
+            }
+          ]
+        },
+        {
+          "id_venta": 24,
+          "codigo": "PS-20260916-1989",
+          "id_usuario": 1,
+          "cliente_nombre": "Simon Acevedo",
+          "cliente_email": "simonacevedotb@gmail.com",
+          "cliente_telefono": "3147728502",
+          "cliente_documento": "1022004330",
+          "direccion_envio": "Oficina principal",
+          "ciudad": "Medellin",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 3200000.0,
+          "costo_envio": 0.0,
+          "total": 3200000.0,
+          "total_articulos": 1,
+          "estado": "pendiente",
+          "creado_en": "2026-09-16 16:32:24",
+          "actualizado_en": "2026-09-16 16:32:24",
+          "detalles": [
+            {
+              "id_detalle": 25,
+              "id_producto": 3,
+              "nombre_producto": "Galaxy S24",
+              "marca_producto": "Samsung",
+              "precio_unitario": 3200000.0,
+              "cantidad": 1,
+              "subtotal": 3200000.0
+            }
+          ]
+        },
+        {
+          "id_venta": 22,
+          "codigo": "PS-20260914-4853",
           "id_usuario": 1,
           "cliente_nombre": "Simon Acevedo",
           "cliente_email": "simonacevedotb@gmail.com",
@@ -1404,62 +1482,22 @@
           "ciudad": "MEDELLIN (ANTIOQUIA)",
           "notas": null,
           "metodo_pago": "contraentrega",
-          "subtotal": 2100000.0,
+          "subtotal": 3200000.0,
           "costo_envio": 0.0,
-          "total": 2100000.0,
+          "total": 3200000.0,
           "total_articulos": 1,
           "estado": "pendiente",
-          "creado_en": "2026-09-10 12:18:58",
-          "actualizado_en": "2026-09-10 12:18:58",
+          "creado_en": "2026-09-14 12:28:28",
+          "actualizado_en": "2026-09-14 12:28:28",
           "detalles": [
             {
-              "id_detalle": 9,
-              "id_producto": 12,
-              "nombre_producto": "iPad 10ma generación",
-              "marca_producto": "Apple",
-              "precio_unitario": 2100000.0,
+              "id_detalle": 23,
+              "id_producto": 3,
+              "nombre_producto": "Galaxy S24",
+              "marca_producto": "Samsung",
+              "precio_unitario": 3200000.0,
               "cantidad": 1,
-              "subtotal": 2100000.0
-            }
-          ]
-        },
-        {
-          "id_venta": 4,
-          "codigo": "PS-20260908-6019",
-          "id_usuario": 7,
-          "cliente_nombre": "Camila Restrepo",
-          "cliente_email": "camila.6044806@phonestore.com",
-          "cliente_telefono": "3105557788",
-          "cliente_documento": "886044806",
-          "direccion_envio": "Carrera 70 # 30-20 Laureles Medellin",
-          "ciudad": "Medellin",
-          "notas": "Llamar antes de subir al apartamento.",
-          "metodo_pago": "contraentrega",
-          "subtotal": 2280000.0,
-          "costo_envio": 0.0,
-          "total": 2280000.0,
-          "total_articulos": 2,
-          "estado": "pagada",
-          "creado_en": "2026-09-08 23:53:56",
-          "actualizado_en": "2026-09-09 00:11:48",
-          "detalles": [
-            {
-              "id_detalle": 4,
-              "id_producto": 12,
-              "nombre_producto": "iPad 10ma generación",
-              "marca_producto": "Apple",
-              "precio_unitario": 2100000.0,
-              "cantidad": 1,
-              "subtotal": 2100000.0
-            },
-            {
-              "id_detalle": 5,
-              "id_producto": 11,
-              "nombre_producto": "Cargador rápido 65W GaN",
-              "marca_producto": "Ugreen",
-              "precio_unitario": 180000.0,
-              "cantidad": 1,
-              "subtotal": 180000.0
+              "subtotal": 3200000.0
             }
           ]
         }
@@ -1467,19 +1505,19 @@
       "paginacion": {
         "pagina": 1,
         "limite": 5,
-        "total": 5,
-        "total_paginas": 1
+        "total": 8,
+        "total_paginas": 2
       },
       "resumen": {
-        "ingresos_totales": 6410000.0,
-        "pedidos_validos": 4
+        "ingresos_totales": 14105000.0,
+        "pedidos_validos": 7
       }
     }
   },
   {
     "prueba": "Consulta el detalle de una venta",
     "metodo": "GET",
-    "endpoint": "/api/ventas/21",
+    "endpoint": "/api/ventas/36",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1487,13 +1525,13 @@
     "respuesta": {
       "ok": true,
       "venta": {
-        "id_venta": 21,
-        "codigo": "PS-20260911-3687",
-        "id_usuario": 38,
+        "id_venta": 36,
+        "codigo": "PS-20260918-1153",
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
-        "cliente_documento": "189152363",
+        "cliente_documento": "189759860",
         "direccion_envio": "Calle 45 # 12-34 Medellin",
         "ciudad": "Medellin",
         "notas": "Pedido generado por las pruebas automatizadas",
@@ -1503,13 +1541,13 @@
         "total": 915000.0,
         "total_articulos": 2,
         "estado": "pendiente",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01",
         "detalles": [
           {
-            "id_detalle": 22,
-            "id_producto": 32,
-            "nombre_producto": "Producto Test 89152363 editado",
+            "id_detalle": 44,
+            "id_producto": 38,
+            "nombre_producto": "Producto Test 89759860 editado",
             "marca_producto": "MarcaTest",
             "precio_unitario": 450000.0,
             "cantidad": 2,
@@ -1522,7 +1560,7 @@
   {
     "prueba": "Impide saltos de estado inválidos (pendiente -> entregada)",
     "metodo": "PATCH",
-    "endpoint": "/api/ventas/21/estado",
+    "endpoint": "/api/ventas/36/estado",
     "status_esperado": "409",
     "status_obtenido": 409,
     "resultado": "OK",
@@ -1535,7 +1573,7 @@
   {
     "prueba": "Marca el pedido como pagado",
     "metodo": "PATCH",
-    "endpoint": "/api/ventas/21/estado",
+    "endpoint": "/api/ventas/36/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1544,13 +1582,13 @@
       "ok": true,
       "message": "Pedido marcado como pagada.",
       "venta": {
-        "id_venta": 21,
-        "codigo": "PS-20260911-3687",
-        "id_usuario": 38,
+        "id_venta": 36,
+        "codigo": "PS-20260918-1153",
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
-        "cliente_documento": "189152363",
+        "cliente_documento": "189759860",
         "direccion_envio": "Calle 45 # 12-34 Medellin",
         "ciudad": "Medellin",
         "notas": "Pedido generado por las pruebas automatizadas",
@@ -1560,13 +1598,13 @@
         "total": 915000.0,
         "total_articulos": 2,
         "estado": "pagada",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01",
         "detalles": [
           {
-            "id_detalle": 22,
-            "id_producto": 32,
-            "nombre_producto": "Producto Test 89152363 editado",
+            "id_detalle": 44,
+            "id_producto": 38,
+            "nombre_producto": "Producto Test 89759860 editado",
             "marca_producto": "MarcaTest",
             "precio_unitario": 450000.0,
             "cantidad": 2,
@@ -1579,7 +1617,7 @@
   {
     "prueba": "Cancela el pedido",
     "metodo": "PATCH",
-    "endpoint": "/api/ventas/21/estado",
+    "endpoint": "/api/ventas/36/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1588,13 +1626,13 @@
       "ok": true,
       "message": "Pedido marcado como cancelada.",
       "venta": {
-        "id_venta": 21,
-        "codigo": "PS-20260911-3687",
-        "id_usuario": 38,
+        "id_venta": 36,
+        "codigo": "PS-20260918-1153",
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
-        "cliente_documento": "189152363",
+        "cliente_documento": "189759860",
         "direccion_envio": "Calle 45 # 12-34 Medellin",
         "ciudad": "Medellin",
         "notas": "Pedido generado por las pruebas automatizadas",
@@ -1604,13 +1642,13 @@
         "total": 915000.0,
         "total_articulos": 2,
         "estado": "cancelada",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04",
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01",
         "detalles": [
           {
-            "id_detalle": 22,
-            "id_producto": 32,
-            "nombre_producto": "Producto Test 89152363 editado",
+            "id_detalle": 44,
+            "id_producto": 38,
+            "nombre_producto": "Producto Test 89759860 editado",
             "marca_producto": "MarcaTest",
             "precio_unitario": 450000.0,
             "cantidad": 2,
@@ -1623,7 +1661,7 @@
   {
     "prueba": "Al cancelar, las unidades vuelven al inventario",
     "metodo": "GET",
-    "endpoint": "/api/productos/32",
+    "endpoint": "/api/productos/38",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1731,23 +1769,23 @@
       "ok": true,
       "message": "Servicio creado.",
       "servicio": {
-        "id_servicio": 25,
-        "nombre": "Servicio Test 89152363",
+        "id_servicio": 31,
+        "nombre": "Servicio Test 89759860",
         "descripcion": "Servicio creado por las pruebas automatizadas",
         "precio": 90000.0,
         "duracion": "1 hora",
         "icono": "search",
         "imagen_url": null,
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
   {
     "prueba": "Edita el servicio",
     "metodo": "PUT",
-    "endpoint": "/api/servicios/25",
+    "endpoint": "/api/servicios/31",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1756,16 +1794,16 @@
       "ok": true,
       "message": "Servicio actualizado.",
       "servicio": {
-        "id_servicio": 25,
-        "nombre": "Servicio Test 89152363 editado",
+        "id_servicio": 31,
+        "nombre": "Servicio Test 89759860 editado",
         "descripcion": "Descripción actualizada",
         "precio": 95000.0,
         "duracion": "2 horas",
         "icono": "search",
         "imagen_url": null,
         "estado": "activo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -1779,23 +1817,23 @@
     "comentario": "",
     "respuesta": {
       "ok": true,
-      "message": "Solicitud SV-20260911-1050 registrada. Nuestro equipo técnico te contactará muy pronto.",
+      "message": "Solicitud SV-20260918-2652 registrada. Nuestro equipo técnico te contactará muy pronto.",
       "solicitud": {
-        "id_solicitud": 18,
-        "codigo": "SV-20260911-1050",
+        "id_solicitud": 24,
+        "codigo": "SV-20260918-2652",
         "id_servicio": 1,
         "nombre_servicio": "Cambio de pantalla",
         "precio_servicio": 250000.0,
-        "id_usuario": 38,
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
         "equipo": "iPhone 13 Pro",
         "descripcion": "La pantalla no responde al tacto en la zona inferior.",
         "respuesta": null,
         "estado": "pendiente",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -1803,8 +1841,8 @@
     "prueba": "Valida los datos de la solicitud",
     "metodo": "POST",
     "endpoint": "/api/solicitudes",
-    "status_esperado": "400",
-    "status_obtenido": 400,
+    "status_esperado": "422",
+    "status_obtenido": 422,
     "resultado": "OK",
     "comentario": "",
     "respuesta": {
@@ -1812,6 +1850,7 @@
       "message": "Datos inválidos.",
       "errors": {
         "cliente_nombre": "Este campo debe tener al menos 3 caracteres.",
+        "cliente_email": "Escribe un correo electrónico válido.",
         "cliente_telefono": "Este campo debe tener al menos 7 caracteres.",
         "descripcion": "Este campo debe tener al menos 10 caracteres."
       }
@@ -1829,21 +1868,21 @@
       "ok": true,
       "solicitudes": [
         {
-          "id_solicitud": 18,
-          "codigo": "SV-20260911-1050",
+          "id_solicitud": 24,
+          "codigo": "SV-20260918-2652",
           "id_servicio": 1,
           "nombre_servicio": "Cambio de pantalla",
           "precio_servicio": 250000.0,
-          "id_usuario": 38,
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
           "equipo": "iPhone 13 Pro",
           "descripcion": "La pantalla no responde al tacto en la zona inferior.",
           "respuesta": null,
           "estado": "pendiente",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01"
         }
       ]
     }
@@ -1860,38 +1899,38 @@
       "ok": true,
       "solicitudes": [
         {
-          "id_solicitud": 18,
-          "codigo": "SV-20260911-1050",
+          "id_solicitud": 24,
+          "codigo": "SV-20260918-2652",
           "id_servicio": 1,
           "nombre_servicio": "Cambio de pantalla",
           "precio_servicio": 250000.0,
-          "id_usuario": 38,
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
           "equipo": "iPhone 13 Pro",
           "descripcion": "La pantalla no responde al tacto en la zona inferior.",
           "respuesta": null,
           "estado": "pendiente",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_solicitud": 17,
-          "codigo": "SV-20260911-2923",
+          "id_solicitud": 23,
+          "codigo": "SV-20260918-8695",
           "id_servicio": 1,
           "nombre_servicio": "Cambio de pantalla",
           "precio_servicio": 250000.0,
-          "id_usuario": 37,
+          "id_usuario": 55,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152302@phonestore.com",
+          "cliente_email": "cliente.test89759627@phonestore.com",
           "cliente_telefono": "3001234567",
           "equipo": "iPhone 13 Pro",
           "descripcion": "La pantalla no responde al tacto en la zona inferior.",
           "respuesta": "Recibimos tu equipo, el diagnóstico estará listo mañana.",
           "estado": "en_proceso",
-          "creado_en": "2026-09-11 13:45:03",
-          "actualizado_en": "2026-09-11 13:45:03"
+          "creado_en": "2026-09-18 14:27:09",
+          "actualizado_en": "2026-09-18 14:27:09"
         }
       ],
       "paginacion": {
@@ -1905,7 +1944,7 @@
   {
     "prueba": "Atiende la solicitud desde el panel",
     "metodo": "PATCH",
-    "endpoint": "/api/solicitudes/18",
+    "endpoint": "/api/solicitudes/24",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -1914,21 +1953,21 @@
       "ok": true,
       "message": "Solicitud actualizada.",
       "solicitud": {
-        "id_solicitud": 18,
-        "codigo": "SV-20260911-1050",
+        "id_solicitud": 24,
+        "codigo": "SV-20260918-2652",
         "id_servicio": 1,
         "nombre_servicio": "Cambio de pantalla",
         "precio_servicio": 250000.0,
-        "id_usuario": 38,
+        "id_usuario": 58,
         "cliente_nombre": "Cliente Pruebas",
-        "cliente_email": "cliente.test89152363@phonestore.com",
+        "cliente_email": "cliente.test89759860@phonestore.com",
         "cliente_telefono": "3001234567",
         "equipo": "iPhone 13 Pro",
         "descripcion": "La pantalla no responde al tacto en la zona inferior.",
         "respuesta": "Recibimos tu equipo, el diagnóstico estará listo mañana.",
         "estado": "en_proceso",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -1943,7 +1982,7 @@
     "respuesta": {
       "ok": true,
       "message": "¡Mensaje enviado! Te responderemos al correo que registraste.",
-      "mensaje_id": 34
+      "mensaje_id": 46
     }
   },
   {
@@ -1957,7 +1996,7 @@
     "respuesta": {
       "ok": true,
       "message": "¡Mensaje enviado! Te responderemos al correo que registraste.",
-      "mensaje_id": 35
+      "mensaje_id": 47
     }
   },
   {
@@ -1972,44 +2011,44 @@
       "ok": true,
       "mensajes": [
         {
-          "id_mensaje": 35,
+          "id_mensaje": 47,
           "nombre": "alert(1)",
           "email": "xss@example.com",
           "telefono": null,
           "asunto": "",
           "mensaje": "document.cookie intento de inyección de código.",
           "estado": "nuevo",
-          "creado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_mensaje": 34,
+          "id_mensaje": 46,
           "nombre": "Visitante de prueba",
           "email": "visitante@example.com",
           "telefono": "3009998877",
           "asunto": "Consulta sobre garantías",
           "mensaje": "Quisiera saber si los equipos tienen garantía extendida disponible.",
           "estado": "nuevo",
-          "creado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_mensaje": 33,
+          "id_mensaje": 45,
           "nombre": "alert(1)",
           "email": "xss@example.com",
           "telefono": null,
           "asunto": "",
           "mensaje": "document.cookie intento de inyección de código.",
           "estado": "leido",
-          "creado_en": "2026-09-11 13:45:03"
+          "creado_en": "2026-09-18 14:27:09"
         },
         {
-          "id_mensaje": 32,
+          "id_mensaje": 44,
           "nombre": "Visitante de prueba",
           "email": "visitante@example.com",
           "telefono": "3009998877",
           "asunto": "Consulta sobre garantías",
           "mensaje": "Quisiera saber si los equipos tienen garantía extendida disponible.",
           "estado": "nuevo",
-          "creado_en": "2026-09-11 13:45:03"
+          "creado_en": "2026-09-18 14:27:09"
         }
       ],
       "nuevos": 3,
@@ -2036,7 +2075,7 @@
   {
     "prueba": "Marca un mensaje como leído",
     "metodo": "PATCH",
-    "endpoint": "/api/contacto/35/estado",
+    "endpoint": "/api/contacto/47/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2045,14 +2084,14 @@
       "ok": true,
       "message": "Mensaje actualizado.",
       "mensaje": {
-        "id_mensaje": 35,
+        "id_mensaje": 47,
         "nombre": "alert(1)",
         "email": "xss@example.com",
         "telefono": null,
         "asunto": "",
         "mensaje": "document.cookie intento de inyección de código.",
         "estado": "leido",
-        "creado_en": "2026-09-11 13:46:04"
+        "creado_en": "2026-09-18 14:31:01"
       }
     }
   },
@@ -2080,18 +2119,18 @@
     "respuesta": {
       "ok": true,
       "ventas": {
-        "ingresos_totales": 5495000.0,
-        "pedidos_totales": 3,
-        "ingresos_hoy": 0.0,
-        "pedidos_hoy": 0,
-        "ingresos_mes": 5495000.0,
-        "pedidos_mes": 3,
-        "ticket_promedio": 1831666.67,
-        "variacion_dia": -100.0,
+        "ingresos_totales": 13190000.0,
+        "pedidos_totales": 6,
+        "ingresos_hoy": 1295000.0,
+        "pedidos_hoy": 1,
+        "ingresos_mes": 13190000.0,
+        "pedidos_mes": 6,
+        "ticket_promedio": 2198333.33,
+        "variacion_dia": 100.0,
         "variacion_mes": 100.0,
-        "pendientes": 2,
+        "pendientes": 5,
         "por_estado": {
-          "pendiente": 2,
+          "pendiente": 5,
           "pagada": 1,
           "enviada": 0,
           "entregada": 0,
@@ -2102,63 +2141,43 @@
         "total_productos": 11,
         "productos_activos": 10,
         "agotados": 0,
-        "stock_bajo": 0,
-        "valor_inventario": 268420000.0
+        "stock_bajo": 1,
+        "valor_inventario": 248060000.0
       },
       "usuarios": {
-        "total": 9,
-        "activos": 8,
-        "clientes": 5,
-        "nuevos_mes": 6
+        "total": 12,
+        "activos": 11,
+        "clientes": 8,
+        "nuevos_mes": 9
       },
       "atencion": {
         "solicitudes_pendientes": 0,
         "mensajes_nuevos": 2
       },
+      "facturacion": {
+        "emitidas": 1,
+        "facturado": 0.0,
+        "pendientes_de_pago": 0,
+        "ventas_sin_factura": 5
+      },
+      "pqr": {
+        "total": 1,
+        "abiertas": 0,
+        "por_estado": {
+          "pendiente": 0,
+          "en_proceso": 0,
+          "respondida": 1,
+          "cerrada": 0
+        },
+        "por_tipo": {
+          "peticion": 0,
+          "queja": 0,
+          "reclamo": 1,
+          "sugerencia": 0
+        }
+      },
       "series": {
         "dias": [
-          {
-            "fecha": "2026-08-29",
-            "etiqueta": "29/08",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-08-30",
-            "etiqueta": "30/08",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-08-31",
-            "etiqueta": "31/08",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-09-01",
-            "etiqueta": "01/09",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-09-02",
-            "etiqueta": "02/09",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-09-03",
-            "etiqueta": "03/09",
-            "total": 0.0,
-            "pedidos": 0
-          },
-          {
-            "fecha": "2026-09-04",
-            "etiqueta": "04/09",
-            "total": 0.0,
-            "pedidos": 0
-          },
           {
             "fecha": "2026-09-05",
             "etiqueta": "05/09",
@@ -2200,6 +2219,48 @@
             "etiqueta": "11/09",
             "total": 0.0,
             "pedidos": 0
+          },
+          {
+            "fecha": "2026-09-12",
+            "etiqueta": "12/09",
+            "total": 0.0,
+            "pedidos": 0
+          },
+          {
+            "fecha": "2026-09-13",
+            "etiqueta": "13/09",
+            "total": 0.0,
+            "pedidos": 0
+          },
+          {
+            "fecha": "2026-09-14",
+            "etiqueta": "14/09",
+            "total": 3200000.0,
+            "pedidos": 1
+          },
+          {
+            "fecha": "2026-09-15",
+            "etiqueta": "15/09",
+            "total": 0.0,
+            "pedidos": 0
+          },
+          {
+            "fecha": "2026-09-16",
+            "etiqueta": "16/09",
+            "total": 3200000.0,
+            "pedidos": 1
+          },
+          {
+            "fecha": "2026-09-17",
+            "etiqueta": "17/09",
+            "total": 0.0,
+            "pedidos": 0
+          },
+          {
+            "fecha": "2026-09-18",
+            "etiqueta": "18/09",
+            "total": 1295000.0,
+            "pedidos": 1
           }
         ],
         "meses": [
@@ -2230,8 +2291,8 @@
           },
           {
             "etiqueta": "Sep 2026",
-            "total": 5495000.0,
-            "pedidos": 3
+            "total": 13190000.0,
+            "pedidos": 6
           }
         ]
       },
@@ -2245,25 +2306,31 @@
         {
           "nombre": "Cargador rápido 65W GaN",
           "marca": "Ugreen",
-          "unidades": 1,
-          "ingresos": 180000.0
+          "unidades": 2,
+          "ingresos": 360000.0
         },
         {
           "nombre": "Galaxy Watch 6",
           "marca": "Samsung",
-          "unidades": 1,
-          "ingresos": 1100000.0
+          "unidades": 2,
+          "ingresos": 2200000.0
+        },
+        {
+          "nombre": "Galaxy S24",
+          "marca": "Samsung",
+          "unidades": 2,
+          "ingresos": 6400000.0
         }
       ],
       "ultimas_ventas": [
         {
-          "id_venta": 21,
-          "codigo": "PS-20260911-3687",
-          "id_usuario": 38,
+          "id_venta": 36,
+          "codigo": "PS-20260918-1153",
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152363",
+          "cliente_documento": "189759860",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -2273,17 +2340,37 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "cancelada",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_venta": 20,
-          "codigo": "PS-20260911-8617",
-          "id_usuario": 37,
+          "id_venta": 35,
+          "codigo": "PS-20260918-7950",
+          "id_usuario": 57,
+          "cliente_nombre": "Quinto Avance",
+          "cliente_email": "cliente.test.quinto142712@phonestore.com",
+          "cliente_telefono": "3140009988",
+          "cliente_documento": "551427121",
+          "direccion_envio": "Calle 45 numero 12-34",
+          "ciudad": "Medellin",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 1280000.0,
+          "costo_envio": 15000.0,
+          "total": 1295000.0,
+          "total_articulos": 2,
+          "estado": "pendiente",
+          "creado_en": "2026-09-18 14:27:13",
+          "actualizado_en": "2026-09-18 14:27:13"
+        },
+        {
+          "id_venta": 34,
+          "codigo": "PS-20260918-8744",
+          "id_usuario": 55,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152302@phonestore.com",
+          "cliente_email": "cliente.test89759627@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152302",
+          "cliente_documento": "189759627",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -2293,71 +2380,70 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "cancelada",
-          "creado_en": "2026-09-11 13:45:03",
-          "actualizado_en": "2026-09-11 13:45:03"
+          "creado_en": "2026-09-18 14:27:09",
+          "actualizado_en": "2026-09-18 14:27:09"
         },
         {
-          "id_venta": 9,
-          "codigo": "PS-20260910-4740",
+          "id_venta": 24,
+          "codigo": "PS-20260916-1989",
           "id_usuario": 1,
           "cliente_nombre": "Simon Acevedo",
           "cliente_email": "simonacevedotb@gmail.com",
           "cliente_telefono": "3147728502",
           "cliente_documento": "1022004330",
           "direccion_envio": "Oficina principal",
-          "ciudad": "MEDELLIN (ANTIOQUIA)",
-          "notas": null,
-          "metodo_pago": "transferencia",
-          "subtotal": 1100000.0,
-          "costo_envio": 15000.0,
-          "total": 1115000.0,
-          "total_articulos": 1,
-          "estado": "pendiente",
-          "creado_en": "2026-09-10 12:20:58",
-          "actualizado_en": "2026-09-10 12:20:58"
-        },
-        {
-          "id_venta": 8,
-          "codigo": "PS-20260910-9311",
-          "id_usuario": 1,
-          "cliente_nombre": "Simon Acevedo",
-          "cliente_email": "simonacevedotb@gmail.com",
-          "cliente_telefono": "3147728502",
-          "cliente_documento": "1022004330",
-          "direccion_envio": "Oficina principal",
-          "ciudad": "MEDELLIN (ANTIOQUIA)",
-          "notas": null,
-          "metodo_pago": "contraentrega",
-          "subtotal": 2100000.0,
-          "costo_envio": 0.0,
-          "total": 2100000.0,
-          "total_articulos": 1,
-          "estado": "pendiente",
-          "creado_en": "2026-09-10 12:18:58",
-          "actualizado_en": "2026-09-10 12:18:58"
-        },
-        {
-          "id_venta": 4,
-          "codigo": "PS-20260908-6019",
-          "id_usuario": 7,
-          "cliente_nombre": "Camila Restrepo",
-          "cliente_email": "camila.6044806@phonestore.com",
-          "cliente_telefono": "3105557788",
-          "cliente_documento": "886044806",
-          "direccion_envio": "Carrera 70 # 30-20 Laureles Medellin",
           "ciudad": "Medellin",
-          "notas": "Llamar antes de subir al apartamento.",
+          "notas": null,
           "metodo_pago": "contraentrega",
-          "subtotal": 2280000.0,
+          "subtotal": 3200000.0,
           "costo_envio": 0.0,
-          "total": 2280000.0,
-          "total_articulos": 2,
-          "estado": "pagada",
-          "creado_en": "2026-09-08 23:53:56",
-          "actualizado_en": "2026-09-09 00:11:48"
+          "total": 3200000.0,
+          "total_articulos": 1,
+          "estado": "pendiente",
+          "creado_en": "2026-09-16 16:32:24",
+          "actualizado_en": "2026-09-16 16:32:24"
+        },
+        {
+          "id_venta": 22,
+          "codigo": "PS-20260914-4853",
+          "id_usuario": 1,
+          "cliente_nombre": "Simon Acevedo",
+          "cliente_email": "simonacevedotb@gmail.com",
+          "cliente_telefono": "3147728502",
+          "cliente_documento": "1022004330",
+          "direccion_envio": "Oficina principal",
+          "ciudad": "MEDELLIN (ANTIOQUIA)",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 3200000.0,
+          "costo_envio": 0.0,
+          "total": 3200000.0,
+          "total_articulos": 1,
+          "estado": "pendiente",
+          "creado_en": "2026-09-14 12:28:28",
+          "actualizado_en": "2026-09-14 12:28:28"
         }
       ],
-      "alertas_stock": []
+      "alertas_stock": [
+        {
+          "id_producto": 12,
+          "nombre": "iPad 10ma generación",
+          "marca": "Apple",
+          "id_categoria": 5,
+          "categoria": "Tablets",
+          "descripcion": "Pantalla Liquid Retina de 10.9\", chip A14 Bionic y 64 GB.",
+          "precio": 2100000.0,
+          "precio_anterior": null,
+          "stock": 1,
+          "stock_minimo": 5,
+          "estado_stock": "bajo",
+          "destacado": false,
+          "imagen_url": "/img/ipad-10.jpg",
+          "estado": "activo",
+          "creado_en": "2026-09-08 19:10:30",
+          "actualizado_en": "2026-09-18 12:29:01"
+        }
+      ]
     }
   },
   {
@@ -2372,18 +2458,18 @@
       "ok": true,
       "rango": {
         "desde": "2026-09-01",
-        "hasta": "2026-09-11"
+        "hasta": "2026-09-18"
       },
       "totales": {
-        "pedidos": 5,
-        "ingresos": 5495000.0,
-        "articulos": 4
+        "pedidos": 8,
+        "ingresos": 13190000.0,
+        "articulos": 8
       },
       "por_metodo_pago": [
         {
           "metodo": "contraentrega",
-          "pedidos": 2,
-          "total": 4380000.0
+          "pedidos": 5,
+          "total": 12075000.0
         },
         {
           "metodo": "transferencia",
@@ -2393,6 +2479,12 @@
       ],
       "productos": [
         {
+          "nombre": "Galaxy S24",
+          "marca": "Samsung",
+          "unidades": 2,
+          "ingresos": 6400000.0
+        },
+        {
           "nombre": "iPad 10ma generación",
           "marca": "Apple",
           "unidades": 2,
@@ -2401,25 +2493,25 @@
         {
           "nombre": "Galaxy Watch 6",
           "marca": "Samsung",
-          "unidades": 1,
-          "ingresos": 1100000.0
+          "unidades": 2,
+          "ingresos": 2200000.0
         },
         {
           "nombre": "Cargador rápido 65W GaN",
           "marca": "Ugreen",
-          "unidades": 1,
-          "ingresos": 180000.0
+          "unidades": 2,
+          "ingresos": 360000.0
         }
       ],
       "ventas": [
         {
-          "id_venta": 21,
-          "codigo": "PS-20260911-3687",
-          "id_usuario": 38,
+          "id_venta": 36,
+          "codigo": "PS-20260918-1153",
+          "id_usuario": 58,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152363@phonestore.com",
+          "cliente_email": "cliente.test89759860@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152363",
+          "cliente_documento": "189759860",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -2429,17 +2521,37 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "cancelada",
-          "creado_en": "2026-09-11 13:46:04",
-          "actualizado_en": "2026-09-11 13:46:04"
+          "creado_en": "2026-09-18 14:31:01",
+          "actualizado_en": "2026-09-18 14:31:01"
         },
         {
-          "id_venta": 20,
-          "codigo": "PS-20260911-8617",
-          "id_usuario": 37,
+          "id_venta": 35,
+          "codigo": "PS-20260918-7950",
+          "id_usuario": 57,
+          "cliente_nombre": "Quinto Avance",
+          "cliente_email": "cliente.test.quinto142712@phonestore.com",
+          "cliente_telefono": "3140009988",
+          "cliente_documento": "551427121",
+          "direccion_envio": "Calle 45 numero 12-34",
+          "ciudad": "Medellin",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 1280000.0,
+          "costo_envio": 15000.0,
+          "total": 1295000.0,
+          "total_articulos": 2,
+          "estado": "pendiente",
+          "creado_en": "2026-09-18 14:27:13",
+          "actualizado_en": "2026-09-18 14:27:13"
+        },
+        {
+          "id_venta": 34,
+          "codigo": "PS-20260918-8744",
+          "id_usuario": 55,
           "cliente_nombre": "Cliente Pruebas",
-          "cliente_email": "cliente.test89152302@phonestore.com",
+          "cliente_email": "cliente.test89759627@phonestore.com",
           "cliente_telefono": "3001234567",
-          "cliente_documento": "189152302",
+          "cliente_documento": "189759627",
           "direccion_envio": "Calle 45 # 12-34 Medellin",
           "ciudad": "Medellin",
           "notas": "Pedido generado por las pruebas automatizadas",
@@ -2449,8 +2561,48 @@
           "total": 915000.0,
           "total_articulos": 2,
           "estado": "cancelada",
-          "creado_en": "2026-09-11 13:45:03",
-          "actualizado_en": "2026-09-11 13:45:03"
+          "creado_en": "2026-09-18 14:27:09",
+          "actualizado_en": "2026-09-18 14:27:09"
+        },
+        {
+          "id_venta": 24,
+          "codigo": "PS-20260916-1989",
+          "id_usuario": 1,
+          "cliente_nombre": "Simon Acevedo",
+          "cliente_email": "simonacevedotb@gmail.com",
+          "cliente_telefono": "3147728502",
+          "cliente_documento": "1022004330",
+          "direccion_envio": "Oficina principal",
+          "ciudad": "Medellin",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 3200000.0,
+          "costo_envio": 0.0,
+          "total": 3200000.0,
+          "total_articulos": 1,
+          "estado": "pendiente",
+          "creado_en": "2026-09-16 16:32:24",
+          "actualizado_en": "2026-09-16 16:32:24"
+        },
+        {
+          "id_venta": 22,
+          "codigo": "PS-20260914-4853",
+          "id_usuario": 1,
+          "cliente_nombre": "Simon Acevedo",
+          "cliente_email": "simonacevedotb@gmail.com",
+          "cliente_telefono": "3147728502",
+          "cliente_documento": "1022004330",
+          "direccion_envio": "Oficina principal",
+          "ciudad": "MEDELLIN (ANTIOQUIA)",
+          "notas": null,
+          "metodo_pago": "contraentrega",
+          "subtotal": 3200000.0,
+          "costo_envio": 0.0,
+          "total": 3200000.0,
+          "total_articulos": 1,
+          "estado": "pendiente",
+          "creado_en": "2026-09-14 12:28:28",
+          "actualizado_en": "2026-09-14 12:28:28"
         },
         {
           "id_venta": 9,
@@ -2540,21 +2692,21 @@
       "ok": true,
       "usuarios": [
         {
-          "id_usuario": 38,
+          "id_usuario": 58,
           "nombre": "Cliente",
           "apellido": "Pruebas",
           "tipo_documento": "CC",
-          "numero_documento": "189152363",
+          "numero_documento": "189759860",
           "direccion": "Calle 45 # 12-34 Medellin",
           "telefono": "3001234567",
-          "email": "cliente.test89152363@phonestore.com",
+          "email": "cliente.test89759860@phonestore.com",
           "email_verificado": false,
           "doble_factor": false,
           "estado": "activo",
           "id_rol": 3,
           "rol": "cliente",
-          "creado_en": "2026-09-11 13:46:03",
-          "actualizado_en": "2026-09-11 13:46:03"
+          "creado_en": "2026-09-18 14:31:00",
+          "actualizado_en": "2026-09-18 14:31:00"
         }
       ],
       "paginacion": {
@@ -2568,7 +2720,7 @@
   {
     "prueba": "Consulta un usuario por id",
     "metodo": "GET",
-    "endpoint": "/api/usuarios/38",
+    "endpoint": "/api/usuarios/58",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2576,21 +2728,21 @@
     "respuesta": {
       "ok": true,
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Pruebas",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 45 # 12-34 Medellin",
         "telefono": "3001234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 3,
         "rol": "cliente",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:03",
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:00",
         "total_pedidos": 1
       }
     }
@@ -2598,7 +2750,7 @@
   {
     "prueba": "Edita un usuario",
     "metodo": "PUT",
-    "endpoint": "/api/usuarios/38",
+    "endpoint": "/api/usuarios/58",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2607,28 +2759,28 @@
       "ok": true,
       "message": "Usuario actualizado.",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Editado",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Carrera 70 # 30-20 Medellin",
         "telefono": "3011234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 3,
         "rol": "cliente",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
   {
     "prueba": "Cambia el rol a empleado",
     "metodo": "PATCH",
-    "endpoint": "/api/usuarios/38/rol",
+    "endpoint": "/api/usuarios/58/rol",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2637,28 +2789,28 @@
       "ok": true,
       "message": "Rol actualizado.",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Editado",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Carrera 70 # 30-20 Medellin",
         "telefono": "3011234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
   {
     "prueba": "Rechaza un rol inexistente",
     "metodo": "PATCH",
-    "endpoint": "/api/usuarios/38/rol",
+    "endpoint": "/api/usuarios/58/rol",
     "status_esperado": "400",
     "status_obtenido": 400,
     "resultado": "OK",
@@ -2674,7 +2826,7 @@
   {
     "prueba": "Desactiva un usuario",
     "metodo": "PATCH",
-    "endpoint": "/api/usuarios/38/estado",
+    "endpoint": "/api/usuarios/58/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2683,21 +2835,21 @@
       "ok": true,
       "message": "Usuario marcado como inactivo.",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Editado",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Carrera 70 # 30-20 Medellin",
         "telefono": "3011234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "inactivo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
@@ -2717,7 +2869,7 @@
   {
     "prueba": "Reactiva el usuario",
     "metodo": "PATCH",
-    "endpoint": "/api/usuarios/38/estado",
+    "endpoint": "/api/usuarios/58/estado",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2726,21 +2878,21 @@
       "ok": true,
       "message": "Usuario marcado como activo.",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Editado",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Carrera 70 # 30-20 Medellin",
         "telefono": "3011234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
@@ -2769,21 +2921,21 @@
       "ok": true,
       "message": "Perfil actualizado.",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Perfil",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 10 # 20-30 Medellin",
         "telefono": "3021234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
@@ -2827,23 +2979,23 @@
     "respuesta": {
       "ok": true,
       "message": "Inicio de sesión exitoso.",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImVtcGxlYWRvIiwiaWRfcm9sIjoyLCJleHAiOjE3ODkyMzg3NjUsImlhdCI6MTc4OTE1MjM2NX0.LeWk6Hm3j9VAdxQjWqAzEFhOOtu9D8OADQJLznZgap4",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImVtcGxlYWRvIiwiaWRfcm9sIjoyLCJleHAiOjE3ODk4NDYyNjIsImlhdCI6MTc4OTc1OTg2Mn0.NoD5vU3QWvay0AX0MSiCyHE5crR7jfTw5iHc3llIjCI",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Perfil",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 10 # 20-30 Medellin",
         "telefono": "3021234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "activo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       }
     }
   },
@@ -2902,7 +3054,7 @@
   {
     "prueba": "Un cliente NO puede eliminar servicios",
     "metodo": "DELETE",
-    "endpoint": "/api/servicios/25",
+    "endpoint": "/api/servicios/31",
     "status_esperado": "403",
     "status_obtenido": 403,
     "resultado": "OK",
@@ -2915,7 +3067,7 @@
   {
     "prueba": "El administrador elimina el servicio de prueba",
     "metodo": "DELETE",
-    "endpoint": "/api/servicios/25",
+    "endpoint": "/api/servicios/31",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2929,7 +3081,7 @@
   {
     "prueba": "El producto con ventas se desactiva en vez de borrarse",
     "metodo": "DELETE",
-    "endpoint": "/api/productos/32",
+    "endpoint": "/api/productos/38",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2937,12 +3089,13 @@
     "respuesta": {
       "ok": true,
       "message": "El producto tiene ventas registradas, por eso se desactivó en lugar de eliminarse (así no se pierde el histórico).",
+      "desactivado": true,
       "producto": {
-        "id_producto": 32,
-        "nombre": "Producto Test 89152363 editado",
+        "id_producto": 38,
+        "nombre": "Producto Test 89759860 editado",
         "marca": "MarcaTest",
-        "id_categoria": 38,
-        "categoria": "Categoria Test 89152363 editada",
+        "id_categoria": 49,
+        "categoria": "Categoria Test 89759860 editada",
         "descripcion": "Descripción actualizada por las pruebas",
         "precio": 450000.0,
         "precio_anterior": null,
@@ -2952,16 +3105,15 @@
         "destacado": true,
         "imagen_url": "/img/iphone-17.webp",
         "estado": "inactivo",
-        "creado_en": "2026-09-11 13:46:04",
-        "actualizado_en": "2026-09-11 13:46:05"
-      },
-      "desactivado": true
+        "creado_en": "2026-09-18 14:31:01",
+        "actualizado_en": "2026-09-18 14:31:02"
+      }
     }
   },
   {
     "prueba": "No se puede borrar una categoría con productos",
     "metodo": "DELETE",
-    "endpoint": "/api/categorias/38",
+    "endpoint": "/api/categorias/49",
     "status_esperado": "409",
     "status_obtenido": 409,
     "resultado": "OK",
@@ -2974,7 +3126,7 @@
   {
     "prueba": "El usuario con pedidos se desactiva en vez de borrarse",
     "metodo": "DELETE",
-    "endpoint": "/api/usuarios/38",
+    "endpoint": "/api/usuarios/58",
     "status_esperado": "200",
     "status_obtenido": 200,
     "resultado": "OK",
@@ -2983,21 +3135,21 @@
       "ok": true,
       "message": "El usuario tiene pedidos registrados, por eso se desactivó en lugar de eliminarse (así no se pierde el histórico de ventas).",
       "usuario": {
-        "id_usuario": 38,
+        "id_usuario": 58,
         "nombre": "Cliente",
         "apellido": "Perfil",
         "tipo_documento": "CC",
-        "numero_documento": "189152363",
+        "numero_documento": "189759860",
         "direccion": "Calle 10 # 20-30 Medellin",
         "telefono": "3021234567",
-        "email": "cliente.test89152363@phonestore.com",
+        "email": "cliente.test89759860@phonestore.com",
         "email_verificado": false,
         "doble_factor": false,
         "estado": "inactivo",
         "id_rol": 2,
         "rol": "empleado",
-        "creado_en": "2026-09-11 13:46:03",
-        "actualizado_en": "2026-09-11 13:46:05"
+        "creado_en": "2026-09-18 14:31:00",
+        "actualizado_en": "2026-09-18 14:31:02"
       },
       "desactivado": true
     }

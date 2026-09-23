@@ -22,6 +22,7 @@ from email.message import EmailMessage
 from pathlib import Path
 
 from dotenv import load_dotenv
+from fastapi import BackgroundTasks
 
 load_dotenv()
 
@@ -108,6 +109,33 @@ def enviar_correo(destinatario: str, asunto: str, cuerpo: str, html: str = "") -
         print(f"❌ No se pudo enviar el correo a {destinatario}: {error}")
         _registrar_en_log(destinatario, asunto, cuerpo, enviado=False)
         return False
+
+
+def enviar_en_segundo_plano(
+    tareas: BackgroundTasks, destinatario: str, asunto: str, cuerpo: str, html: str = ""
+) -> bool:
+    """Encola el correo para después de haber respondido al navegador.
+
+    Hablar con un servidor SMTP tarda entre uno y varios segundos, y en
+    los correos que nadie está esperando en pantalla (confirmación de la
+    cuenta, aviso de recuperación, respuesta a una PQR) esa espera solo
+    sirve para que la página se quede pensando. `BackgroundTasks` deja
+    que FastAPI mande la respuesta primero y envíe el correo después, con
+    la misma petición todavía viva.
+
+    En la recuperación de contraseña, además, es una cuestión de
+    seguridad: si el envío bloqueara, responder tarde delataría que el
+    correo sí existe en la base de datos.
+
+    Los códigos de doble factor NO usan esta vía: ahí el usuario está
+    mirando la pantalla, esperando el código, y conviene saber en el acto
+    si el envío falló.
+
+    Devuelve si hay SMTP configurado; el resultado del envío se conoce
+    después y queda en `correos_enviados.log`.
+    """
+    tareas.add_task(enviar_correo, destinatario, asunto, cuerpo, html)
+    return smtp_configurado()
 
 
 # ---------------------------------------------------------------
@@ -324,3 +352,38 @@ def correo_doble_factor(nombre: str, codigo: str, minutos: int) -> tuple[str, st
         )
     )
     return asunto, cuerpo, _plantilla_html("Tu c&oacute;digo de acceso", contenido)
+
+
+def correo_respuesta_pqr(
+    nombre: str, radicado: str, asunto_pqr: str, respuesta: str
+) -> tuple[str, str, str]:
+    """Aviso al cliente cuando su PQR recibe respuesta."""
+    asunto = f"PhoneStore - Respuesta a tu solicitud {radicado}"
+    cuerpo = (
+        f"Hola {nombre},\n\n"
+        f"Respondimos tu solicitud {radicado} sobre \"{asunto_pqr}\".\n\n"
+        f"Nuestra respuesta:\n{respuesta}\n\n"
+        "Puedes consultar el estado en cualquier momento con tu numero de "
+        "radicado desde la pagina de PQR.\n\n"
+        "Equipo PhoneStore"
+    )
+
+    contenido = (
+        f'<p style="margin:0 0 20px;color:#3a3a44;'
+        f'font:400 14px/1.7 Arial,sans-serif;">Hola <strong>{nombre}</strong>, '
+        f"respondimos tu solicitud <strong>{radicado}</strong>.</p>"
+        f'<p style="margin:0 0 6px;color:{GRIS_TEXTO};'
+        f'font:700 11px/1.6 Arial,sans-serif;letter-spacing:1.6px;">ASUNTO</p>'
+        f'<p style="margin:0 0 18px;color:#16161a;'
+        f'font:400 14px/1.6 Arial,sans-serif;">{asunto_pqr}</p>'
+        f'<p style="margin:0 0 6px;color:{GRIS_TEXTO};'
+        f'font:700 11px/1.6 Arial,sans-serif;letter-spacing:1.6px;">RESPUESTA</p>'
+        f'<div style="margin:0 0 22px;padding:14px 16px;background:#fafafb;'
+        f'border-left:3px solid {ROJO};color:#3a3a44;'
+        f'font:400 14px/1.7 Arial,sans-serif;">{respuesta}</div>'
+        + _aviso(
+            "Si necesitas ampliar la informacion, responde radicando una "
+            "solicitud nueva con este mismo numero como referencia."
+        )
+    )
+    return asunto, cuerpo, _plantilla_html("Respuesta a tu solicitud", contenido)

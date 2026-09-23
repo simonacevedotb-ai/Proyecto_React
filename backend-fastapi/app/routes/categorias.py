@@ -6,9 +6,9 @@
 #   PATCH  /api/categorias/{id}/estado administrador o empleado
 #   DELETE /api/categorias/{id}        administrador
 
-from typing import Optional
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -16,7 +16,14 @@ from app.auth import auth_optional, require_role
 from app.database import get_db
 from app.errors import AppError
 from app.models import Categoria, Producto
-from app.schemas import CategoriaActualizar, CategoriaCrear, EstadoUpdate
+from app.schemas import (
+    CategoriaActualizar,
+    CategoriaCrear,
+    CategoriasRespuesta,
+    CategoriaUnicaRespuesta,
+    EstadoUpdate,
+    RespuestaSimple,
+)
 from app.serializers import categoria_dict
 from app.validations import limpiar_texto, slugify, validate_categoria
 
@@ -49,7 +56,11 @@ def _slug_unico(db: Session, nombre: str, id_actual: Optional[int] = None) -> st
         contador += 1
 
 
-@router.get("")
+@router.get(
+    "",
+    response_model=CategoriasRespuesta,
+    summary="Lista las categorias con su numero de productos",
+)
 def listar(
     db: Session = Depends(get_db),
     current_user: Optional[dict] = Depends(auth_optional),
@@ -71,7 +82,16 @@ def listar(
     }
 
 
-@router.post("", status_code=201)
+@router.post(
+    "",
+    status_code=201,
+    response_model=CategoriaUnicaRespuesta,
+    summary="Crea una categoria (administrador o empleado)",
+    responses={
+        400: {"description": "Datos invalidos."},
+        403: {"description": "El rol no tiene permiso."},
+    },
+)
 def crear(
     body: CategoriaCrear,
     db: Session = Depends(get_db),
@@ -98,9 +118,13 @@ def crear(
     return {"ok": True, "message": "Categoría creada.", "categoria": categoria_dict(categoria, 0)}
 
 
-@router.put("/{id_categoria}")
+@router.put(
+    "/{id_categoria}",
+    response_model=CategoriaUnicaRespuesta,
+    summary="Actualiza una categoria",
+)
 def actualizar(
-    id_categoria: int,
+    id_categoria: Annotated[int, Path(ge=1, description="Identificador de la categoria.")],
     body: CategoriaActualizar,
     db: Session = Depends(get_db),
     _user: dict = Depends(require_role(*ROLES_GESTOR)),
@@ -137,9 +161,13 @@ def actualizar(
     }
 
 
-@router.patch("/{id_categoria}/estado")
+@router.patch(
+    "/{id_categoria}/estado",
+    response_model=CategoriaUnicaRespuesta,
+    summary="Activa o desactiva una categoria",
+)
 def cambiar_estado(
-    id_categoria: int,
+    id_categoria: Annotated[int, Path(ge=1, description="Identificador de la categoria.")],
     body: EstadoUpdate,
     db: Session = Depends(get_db),
     _user: dict = Depends(require_role(*ROLES_GESTOR)),
@@ -163,9 +191,13 @@ def cambiar_estado(
     }
 
 
-@router.delete("/{id_categoria}")
+@router.delete(
+    "/{id_categoria}",
+    response_model=RespuestaSimple,
+    summary="Elimina una categoria sin productos asociados",
+)
 def eliminar(
-    id_categoria: int,
+    id_categoria: Annotated[int, Path(ge=1, description="Identificador de la categoria.")],
     db: Session = Depends(get_db),
     _user: dict = Depends(require_role("administrador")),
 ):

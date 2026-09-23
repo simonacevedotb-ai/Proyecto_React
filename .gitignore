@@ -45,3 +45,9 @@ Thumbs.db
 # de correo de personas. No tienen por que acabar en el repositorio.
 # ---------------------------------------------------------------
 backend-fastapi/tests/correos_recibidos/
+
+# ---------------------------------------------------------------
+# Facturas y reportes que descarga prueba_quinto_avance.py.
+# Se regeneran en cada ejecucion y llevan datos de pedidos.
+# ---------------------------------------------------------------
+backend-fastapi/tests/descargas_prueba/

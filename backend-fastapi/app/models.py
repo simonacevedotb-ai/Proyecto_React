@@ -6,6 +6,7 @@
 #   2. Catálogo            -> Categoria, Producto, Servicio
 #   3. Ventas e inventario -> Venta, VentaDetalle, MovimientoInventario
 #   4. Atención al cliente -> SolicitudServicio, MensajeContacto
+#   5. Quinto avance       -> Factura, PQR, Conversacion, MensajeChat
 
 from sqlalchemy import (
     DECIMAL,
@@ -192,6 +193,8 @@ class Venta(Base):
     notas = Column(String(300), nullable=True)
     metodo_pago = Column(String(20), nullable=False, default="contraentrega")
     subtotal = Column(DECIMAL(12, 2), nullable=False, default=0)
+    descuento = Column(DECIMAL(12, 2), nullable=False, default=0)
+    impuestos = Column(DECIMAL(12, 2), nullable=False, default=0)
     costo_envio = Column(DECIMAL(12, 2), nullable=False, default=0)
     total = Column(DECIMAL(12, 2), nullable=False, default=0)
     total_articulos = Column(Integer, nullable=False, default=0)
@@ -283,3 +286,121 @@ class MensajeContacto(Base):
     mensaje = Column(String(1000), nullable=False)
     estado = Column(String(12), nullable=False, default="nuevo")
     creado_en = Column(DateTime, server_default=func.now())
+
+
+# ===============================================================
+# 5. Facturación, PQR y asistente (quinto avance)
+# ===============================================================
+class Factura(Base):
+    """Documento emitido a partir de una venta.
+
+    Guarda una copia de los importes y de los datos del cliente. Si
+    mañana cambia el precio de un producto o el cliente actualiza su
+    dirección, la factura ya emitida debe seguir diciendo lo mismo que el
+    día que se expidió.
+    """
+
+    __tablename__ = "facturas"
+
+    id_factura = Column(Integer, primary_key=True, autoincrement=True)
+    numero = Column(String(20), nullable=False, unique=True)
+    id_venta = Column(Integer, ForeignKey("ventas.id_venta"), nullable=False, unique=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=True)
+
+    cliente_nombre = Column(String(120), nullable=False)
+    cliente_documento = Column(String(20), nullable=True)
+    cliente_email = Column(String(120), nullable=False)
+    cliente_telefono = Column(String(15), nullable=True)
+    cliente_direccion = Column(String(150), nullable=True)
+
+    subtotal = Column(DECIMAL(12, 2), nullable=False, default=0)
+    descuento = Column(DECIMAL(12, 2), nullable=False, default=0)
+    impuestos = Column(DECIMAL(12, 2), nullable=False, default=0)
+    costo_envio = Column(DECIMAL(12, 2), nullable=False, default=0)
+    total = Column(DECIMAL(12, 2), nullable=False, default=0)
+
+    estado = Column(String(10), nullable=False, default="emitida")
+    observaciones = Column(String(255), nullable=True)
+    creado_en = Column(DateTime, server_default=func.now())
+    actualizado_en = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    venta = relationship("Venta")
+    usuario = relationship("Usuario")
+
+
+class PQR(Base):
+    """Peticiones, quejas, reclamos y sugerencias.
+
+    El radicado es el número con el que el cliente consulta su caso sin
+    tener que iniciar sesión.
+    """
+
+    __tablename__ = "pqr"
+
+    id_pqr = Column(Integer, primary_key=True, autoincrement=True)
+    radicado = Column(String(20), nullable=False, unique=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=True)
+
+    tipo = Column(String(12), nullable=False)  # peticion|queja|reclamo|sugerencia
+    asunto = Column(String(120), nullable=False)
+    descripcion = Column(String(1000), nullable=False)
+
+    cliente_nombre = Column(String(80), nullable=False)
+    cliente_email = Column(String(120), nullable=False)
+    cliente_telefono = Column(String(15), nullable=True)
+    id_venta = Column(Integer, ForeignKey("ventas.id_venta"), nullable=True)
+
+    estado = Column(String(12), nullable=False, default="pendiente")
+    respuesta = Column(String(1000), nullable=True)
+    id_responsable = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=True)
+    respondida_en = Column(DateTime, nullable=True)
+
+    creado_en = Column(DateTime, server_default=func.now())
+    actualizado_en = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    usuario = relationship("Usuario", foreign_keys=[id_usuario])
+    responsable = relationship("Usuario", foreign_keys=[id_responsable])
+    venta = relationship("Venta")
+
+
+class Conversacion(Base):
+    """Una charla con el asistente.
+
+    Se identifica con una clave pública para que un visitante sin cuenta
+    pueda continuar su conversación; cuando hay sesión, además se enlaza
+    al usuario.
+    """
+
+    __tablename__ = "conversaciones"
+
+    id_conversacion = Column(Integer, primary_key=True, autoincrement=True)
+    clave = Column(String(43), nullable=False, unique=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=True)
+    titulo = Column(String(120), nullable=True)
+    motor = Column(String(30), nullable=False, default="catalogo")
+    creado_en = Column(DateTime, server_default=func.now())
+    actualizado_en = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    usuario = relationship("Usuario")
+    mensajes = relationship(
+        "MensajeChat",
+        back_populates="conversacion",
+        cascade="all, delete-orphan",
+        order_by="MensajeChat.id_mensaje",
+    )
+
+
+class MensajeChat(Base):
+    """Cada turno de la conversación, en orden."""
+
+    __tablename__ = "mensajes_chat"
+
+    id_mensaje = Column(Integer, primary_key=True, autoincrement=True)
+    id_conversacion = Column(
+        Integer, ForeignKey("conversaciones.id_conversacion"), nullable=False
+    )
+    autor = Column(String(10), nullable=False)  # cliente | asistente
+    contenido = Column(String(2000), nullable=False)
+    creado_en = Column(DateTime, server_default=func.now())
+
+    conversacion = relationship("Conversacion", back_populates="mensajes")

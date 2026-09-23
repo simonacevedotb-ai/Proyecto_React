@@ -72,6 +72,8 @@ function Dashboard() {
   const inv = datos?.inventario || {};
   const usu = datos?.usuarios || {};
   const at = datos?.atencion || {};
+  const fac = datos?.facturacion || {};
+  const pqr = datos?.pqr || {};
 
   const hayAlertas = (inv.agotados || 0) > 0 || (inv.stock_bajo || 0) > 0;
 
@@ -163,6 +165,44 @@ function Dashboard() {
           detalle="Precio de venta × existencias"
           icono="almacen"
           tono="neutro"
+          cargando={cargando}
+        />
+      </div>
+
+      {/* Facturación y atención al cliente */}
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          etiqueta="Total facturado"
+          valor={formatoPrecio(fac.facturado || 0)}
+          detalle={`${formatoNumero(fac.emitidas || 0)} facturas emitidas`}
+          icono="billete"
+          tono="exito"
+          cargando={cargando}
+        />
+        <StatCard
+          etiqueta="Ventas sin facturar"
+          valor={formatoNumero(fac.ventas_sin_factura || 0)}
+          detalle="Pedidos que esperan factura"
+          icono="recibo"
+          tono={fac.ventas_sin_factura > 0 ? "alerta" : "exito"}
+          alerta={fac.ventas_sin_factura > 0}
+          cargando={cargando}
+        />
+        <StatCard
+          etiqueta="PQR recibidas"
+          valor={formatoNumero(pqr.total || 0)}
+          detalle={`${formatoNumero(pqr.por_estado?.respondida || 0)} ya respondidas`}
+          icono="chat"
+          tono="marca"
+          cargando={cargando}
+        />
+        <StatCard
+          etiqueta="PQR abiertas"
+          valor={formatoNumero(pqr.abiertas || 0)}
+          detalle="Pendientes y en proceso"
+          icono="alerta"
+          tono={pqr.abiertas > 0 ? "alerta" : "exito"}
+          alerta={pqr.abiertas > 0}
           cargando={cargando}
         />
       </div>

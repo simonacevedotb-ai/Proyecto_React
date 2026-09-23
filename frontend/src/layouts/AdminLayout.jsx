@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/images/logo.png";
 import { contactoService } from "../services/contactoService";
 import { inventarioService } from "../services/inventarioService";
+import { pqrService } from "../services/pqrService";
 import { solicitudService } from "../services/solicitudService";
 import { ventaService } from "../services/ventaService";
 
@@ -42,7 +43,9 @@ const MENU = [
     grupo: "Operación",
     items: [
       { to: "/admin/ventas", label: "Pedidos y ventas", icono: "recibo", contador: "pedidos" },
+      { to: "/admin/facturas", label: "Facturación", icono: "billete" },
       { to: "/admin/solicitudes", label: "Solicitudes", icono: "documento", contador: "solicitudes" },
+      { to: "/admin/pqr", label: "PQR", icono: "chat", contador: "pqr" },
       { to: "/admin/mensajes", label: "Mensajes", icono: "sobre", contador: "mensajes" },
     ],
   },
@@ -68,6 +71,7 @@ function AdminLayout() {
     pedidos: 0,
     solicitudes: 0,
     mensajes: 0,
+    pqr: 0,
     stockBajo: 0,
     agotados: 0,
   });
@@ -80,11 +84,12 @@ function AdminLayout() {
     let activo = true;
 
     async function cargarContadores() {
-      const [ventas, solicitudes, mensajes, alertas] = await Promise.all([
+      const [ventas, solicitudes, mensajes, alertas, pqr] = await Promise.all([
         ventaService.listar({ estado: "pendiente", limite: 1 }).catch(() => null),
         solicitudService.listar({ estado: "pendiente", limite: 1 }).catch(() => null),
         contactoService.listar({ estado: "nuevo", limite: 1 }).catch(() => null),
         inventarioService.alertas().catch(() => null),
+        pqrService.listar({ estado: "pendiente", limite: 1 }).catch(() => null),
       ]);
 
       if (!activo) return;
@@ -92,6 +97,7 @@ function AdminLayout() {
         pedidos: ventas?.paginacion?.total || 0,
         solicitudes: solicitudes?.paginacion?.total || 0,
         mensajes: mensajes?.paginacion?.total || 0,
+        pqr: pqr?.paginacion?.total || 0,
         stockBajo: alertas?.totales?.stock_bajo || 0,
         agotados: alertas?.totales?.agotados || 0,
       });

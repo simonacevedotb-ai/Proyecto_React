@@ -7,3 +7,12 @@ python-dotenv==1.0.1
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
+
+# Reportes del quinto avance: PDF y Excel
+reportlab==5.0.1
+openpyxl==3.1.5
+
+# Pruebas automáticas (pytest tests/test_api.py). httpx es el cliente
+# HTTP que usa TestClient para hablar con la aplicación sin abrir puerto.
+pytest==8.3.4
+httpx==0.28.1

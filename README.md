@@ -15,9 +15,9 @@ cuatro capas y control de acceso por rol verificado en el servidor.
 
 | | |
 |---|---|
-| Endpoints | 51 en 10 módulos |
-| Tablas | 13, con 13 llaves foráneas y 48 índices |
-| Pruebas automatizadas | 87, todas superadas |
+| Endpoints | 75 operaciones en 58 rutas, repartidas en 15 módulos |
+| Tablas | 18, con 21 llaves foráneas y 77 índices |
+| Pruebas automatizadas | 192, todas superadas (25 con Pytest + 167 de punta a punta) |
 | Roles | administrador · empleado · cliente |
 | Errores de ESLint | 0 |
 
@@ -122,18 +122,33 @@ con 403 cualquier operación que no le corresponda.
 | [CI/CD](docs/04-ci-cd.md) | Integración continua con GitHub Actions |
 | [Evidencia de pruebas](backend-fastapi/tests/evidencia_pruebas_api.md) | Las 87 pruebas con sus respuestas |
 | [Manual técnico](docs/05-manual-tecnico.md) | Instalación, arquitectura, API, seguridad y mantenimiento |
+| [Correos y doble factor](docs/06-correos-y-doble-factor.md) | Correos del sistema y segundo paso del login |
+| [Quinto avance](docs/07-quinto-avance.md) | Facturación, reportes, PQR, asistente y despliegue |
+| [FastAPI frente a Django REST](docs/08-comparativa-fastapi-drf.md) | Comparativa técnica aplicada al proyecto |
 
 ---
 
 ## Pruebas
 
-Con el backend corriendo:
+**Pruebas unitarias y de integración (Pytest).** No necesitan servidor
+ni base de datos encendida: levantan la aplicación en memoria con
+`TestClient` y una base SQLite temporal.
+
+```bash
+cd backend-fastapi && pytest
+```
+
+Son 25 comprobaciones sobre la autenticación (registro, inicio de
+sesión, sesión actual, token inválido, 401 y 403) y el CRUD completo de
+categorías y productos.
+
+**Pruebas de punta a punta.** Con el backend corriendo:
 
 ```bash
 cd backend-fastapi && python -m tests.pruebas_api
 ```
 
-Recorre los 51 endpoints con GET, POST, PUT, PATCH y DELETE, y comprueba
+Recorre los endpoints con GET, POST, PUT, PATCH y DELETE, y comprueba
 la autenticación JWT, el control de roles, las validaciones del servidor,
 el descuento de stock, la protección de precios y el saneamiento contra
 inyección de código. Genera el informe en `tests/evidencia_pruebas_api.md`.

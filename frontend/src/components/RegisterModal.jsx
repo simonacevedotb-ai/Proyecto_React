@@ -197,8 +197,8 @@ function RegisterModal({ isOpen, onClose, onRegistered }) {
             label="Dirección"
             name="direccion"
             required
-            maxLength={150}
-            hint="Entre 10 y 150 caracteres (ej: Calle 45 # 12-34, Barrio Centro)."
+            maxLength={70}
+            hint="Entre 10 y 70 caracteres (ej: Calle 45 # 12-34, Barrio Centro)."
             value={values.direccion}
             onChange={handleChange}
             onBlur={handleBlur}

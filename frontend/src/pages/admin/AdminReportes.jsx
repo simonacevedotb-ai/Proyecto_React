@@ -9,6 +9,7 @@ import EmptyState from "../../components/ui/EmptyState";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { useToast } from "../../context/ToastContext";
 import { dashboardService } from "../../services/dashboardService";
+import { reporteService } from "../../services/reporteService";
 import {
   ESTADOS_VENTA,
   fechaISO,
@@ -40,6 +41,7 @@ const RANGOS = [
 /** Reporte de ventas por rango de fechas, exportable a CSV o impresión. */
 function AdminReportes() {
   const toast = useToast();
+  const [descargando, setDescargando] = useState(null);
 
   const [desde, setDesde] = useState(inicioDeMes());
   const [hasta, setHasta] = useState(fechaISO(HOY));
@@ -77,50 +79,6 @@ function AdminReportes() {
     setHasta(rango.hasta);
   };
 
-  /** Exporta el reporte a un archivo CSV que se abre en Excel. */
-  const exportarCSV = () => {
-    if (!datos || datos.ventas.length === 0) {
-      toast.alerta("No hay datos para exportar en este rango.");
-      return;
-    }
-
-    const filas = [
-      ["Codigo", "Fecha", "Cliente", "Correo", "Ciudad", "Metodo de pago", "Articulos", "Subtotal", "Envio", "Total", "Estado"],
-      ...datos.ventas.map((v) => [
-        v.codigo,
-        v.creado_en,
-        v.cliente_nombre,
-        v.cliente_email,
-        v.ciudad,
-        METODOS_PAGO[v.metodo_pago] || v.metodo_pago,
-        v.total_articulos,
-        v.subtotal,
-        v.costo_envio,
-        v.total,
-        v.estado,
-      ]),
-    ];
-
-    // El punto y coma y el BOM hacen que Excel en español lo abra bien.
-    const csv = filas
-      .map((fila) =>
-        fila.map((celda) => `"${String(celda ?? "").replace(/"/g, '""')}"`).join(";")
-      )
-      .join("\r\n");
-
-    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = `reporte-ventas-${desde}-a-${hasta}.csv`;
-    document.body.appendChild(enlace);
-    enlace.click();
-    document.body.removeChild(enlace);
-    URL.revokeObjectURL(url);
-
-    toast.exito("Reporte descargado en formato CSV.");
-  };
-
   const totales = datos?.totales || {};
 
   const columnas = [
@@ -132,6 +90,27 @@ function AdminReportes() {
     { label: "Estado" },
   ];
 
+  /**
+   * Descarga el reporte en el formato pedido.
+   *
+   * El archivo lo arma el backend con la misma consulta de la pantalla,
+   * de modo que lo descargado y lo que se ve nunca se separan.
+   */
+  const descargar = async (formato) => {
+    setDescargando(formato);
+    try {
+      const nombre =
+        formato === "pdf"
+          ? await reporteService.descargarPDF({ desde, hasta })
+          : await reporteService.descargarExcel({ desde, hasta });
+      toast.exito(`Descargando ${nombre}`);
+    } catch (fallo) {
+      toast.error(fallo.message || "No se pudo generar el archivo.");
+    } finally {
+      setDescargando(null);
+    }
+  };
+
   return (
     <>
       <PanelHeader
@@ -142,8 +121,22 @@ function AdminReportes() {
         <Button variant="secondary" size="sm" icono="imprimir" onClick={() => window.print()}>
           Imprimir
         </Button>
-        <Button size="sm" icono="descargar" onClick={exportarCSV}>
-          Exportar CSV
+        <Button
+          variant="secondary"
+          size="sm"
+          icono="descargar"
+          cargando={descargando === "excel"}
+          onClick={() => descargar("excel")}
+        >
+          Excel
+        </Button>
+        <Button
+          size="sm"
+          icono="documento"
+          cargando={descargando === "pdf"}
+          onClick={() => descargar("pdf")}
+        >
+          PDF
         </Button>
       </PanelHeader>
 

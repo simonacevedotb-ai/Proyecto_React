@@ -17,6 +17,8 @@ from app.auth import require_role
 from app.database import get_db
 from app.errors import AppError
 from app.models import (
+    PQR,
+    Factura,
     MensajeContacto,
     Producto,
     SolicitudServicio,
@@ -222,6 +224,40 @@ def resumen(
             return 100.0 if actual > 0 else 0.0
         return round(((actual - anterior) / anterior) * 100, 1)
 
+    # --- Facturación y PQR (quinto avance) ---
+    facturas_emitidas = db.query(func.count(Factura.id_factura)).scalar() or 0
+    facturado = (
+        db.query(func.coalesce(func.sum(Factura.total), 0))
+        .filter(Factura.estado != "anulada")
+        .scalar()
+        or 0
+    )
+    facturas_pendientes = (
+        db.query(func.count(Factura.id_factura))
+        .filter(Factura.estado == "emitida")
+        .scalar()
+        or 0
+    )
+    # Ventas sin factura: es la cola de trabajo del area comercial
+    ventas_sin_factura = (
+        db.query(func.count(Venta.id_venta))
+        .outerjoin(Factura, Factura.id_venta == Venta.id_venta)
+        .filter(Factura.id_factura.is_(None), Venta.estado != "cancelada")
+        .scalar()
+        or 0
+    )
+
+    pqr_por_estado = dict(
+        db.query(PQR.estado, func.count(PQR.id_pqr)).group_by(PQR.estado).all()
+    )
+    pqr_por_tipo = dict(
+        db.query(PQR.tipo, func.count(PQR.id_pqr)).group_by(PQR.tipo).all()
+    )
+    pqr_total = sum(pqr_por_estado.values())
+    pqr_abiertas = int(pqr_por_estado.get("pendiente", 0)) + int(
+        pqr_por_estado.get("en_proceso", 0)
+    )
+
     return {
         "ok": True,
         "ventas": {
@@ -256,6 +292,24 @@ def resumen(
         "atencion": {
             "solicitudes_pendientes": solicitudes_pendientes,
             "mensajes_nuevos": mensajes_nuevos,
+        },
+        "facturacion": {
+            "emitidas": int(facturas_emitidas),
+            "facturado": float(facturado),
+            "pendientes_de_pago": int(facturas_pendientes),
+            "ventas_sin_factura": int(ventas_sin_factura),
+        },
+        "pqr": {
+            "total": int(pqr_total),
+            "abiertas": int(pqr_abiertas),
+            "por_estado": {
+                estado: int(pqr_por_estado.get(estado, 0))
+                for estado in ("pendiente", "en_proceso", "respondida", "cerrada")
+            },
+            "por_tipo": {
+                tipo: int(pqr_por_tipo.get(tipo, 0))
+                for tipo in ("peticion", "queja", "reclamo", "sugerencia")
+            },
         },
         "series": {"dias": serie_dias, "meses": serie_meses},
         "mas_vendidos": [

@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from "react-router-dom";
 
 import CartDrawer from "../components/CartDrawer";
+import Chatbot from "../components/Chatbot";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ToastContainer from "../components/ToastContainer";
@@ -17,6 +18,7 @@ import Index from "../pages/Index";
 import Login from "../pages/Login";
 import NoEncontrada from "../pages/NoEncontrada";
 import Politicas from "../pages/Politicas";
+import PQR from "../pages/PQR";
 import ProductoDetalle from "../pages/ProductoDetalle";
 import Productos from "../pages/Productos";
 import RecuperarContrasena from "../pages/RecuperarContrasena";
@@ -28,7 +30,9 @@ import VerificarCorreo from "../pages/VerificarCorreo";
 // Área del cliente
 import ClienteResumen from "../pages/cliente/ClienteResumen";
 import MiPerfil from "../pages/cliente/MiPerfil";
+import MisFacturas from "../pages/cliente/MisFacturas";
 import MisPedidos from "../pages/cliente/MisPedidos";
+import MisPQR from "../pages/cliente/MisPQR";
 import MisSolicitudes from "../pages/cliente/MisSolicitudes";
 
 // Panel administrativo: se carga bajo demanda (code splitting).
@@ -37,6 +41,8 @@ import MisSolicitudes from "../pages/cliente/MisSolicitudes";
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
 const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
 const AdminProductos = lazy(() => import("../pages/admin/AdminProductos"));
+const AdminFacturas = lazy(() => import("../pages/admin/AdminFacturas"));
+const AdminPQR = lazy(() => import("../pages/admin/AdminPQR"));
 const AdminCategorias = lazy(() => import("../pages/admin/AdminCategorias"));
 const AdminServicios = lazy(() => import("../pages/admin/AdminServicios"));
 const AdminInventario = lazy(() => import("../pages/admin/AdminInventario"));
@@ -88,6 +94,7 @@ function LayoutTienda() {
       </main>
       <Footer />
       <WhatsAppButton phone="573147728502" />
+      <Chatbot />
       <CartDrawer />
     </div>
   );
@@ -108,6 +115,7 @@ function AppRouter() {
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/quienes-somos" element={<QuienesSomos />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/pqr" element={<PQR />} />
           <Route path="/politicas/:seccion" element={<Politicas />} />
           <Route path="/login" element={<Login />} />
           <Route path="/restablecer-password" element={<RestablecerPassword />} />
@@ -134,6 +142,8 @@ function AppRouter() {
           >
             <Route index element={<ClienteResumen />} />
             <Route path="pedidos" element={<MisPedidos />} />
+            <Route path="facturas" element={<MisFacturas />} />
+            <Route path="pqr" element={<MisPQR />} />
             <Route path="solicitudes" element={<MisSolicitudes />} />
             <Route path="perfil" element={<MiPerfil />} />
           </Route>
@@ -158,6 +168,8 @@ function AppRouter() {
           <Route path="servicios" element={<Suspense fallback={<CargandoSeccion />}><AdminServicios /></Suspense>} />
           <Route path="inventario" element={<Suspense fallback={<CargandoSeccion />}><AdminInventario /></Suspense>} />
           <Route path="ventas" element={<Suspense fallback={<CargandoSeccion />}><AdminVentas /></Suspense>} />
+          <Route path="facturas" element={<Suspense fallback={<CargandoSeccion />}><AdminFacturas /></Suspense>} />
+          <Route path="pqr" element={<Suspense fallback={<CargandoSeccion />}><AdminPQR /></Suspense>} />
           <Route path="solicitudes" element={<Suspense fallback={<CargandoSeccion />}><AdminSolicitudes /></Suspense>} />
           <Route path="mensajes" element={<Suspense fallback={<CargandoSeccion />}><AdminMensajes /></Suspense>} />
           <Route path="reportes" element={<Suspense fallback={<CargandoSeccion />}><AdminReportes /></Suspense>} />

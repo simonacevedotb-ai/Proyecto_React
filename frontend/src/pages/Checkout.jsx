@@ -194,7 +194,9 @@ function Checkout() {
         setAvisos(detalles);
         await sincronizar();
       }
-      if (error.errors && error.status === 400) {
+      // 400 son las reglas de negocio y 422 las del esquema; en los dos
+      // casos el backend manda { campo: mensaje } para pintar debajo.
+      if (error.errors && (error.status === 400 || error.status === 422)) {
         setErrors((prev) => ({ ...prev, ...error.errors }));
       }
       setErrorServidor(error.message || "No pudimos registrar tu pedido.");

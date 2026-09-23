@@ -9,9 +9,9 @@
 #   PATCH  /api/productos/{id}/estado administrador o empleado
 #   DELETE /api/productos/{id}       administrador
 
-from typing import Optional
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, joinedload
 
@@ -19,7 +19,15 @@ from app.auth import auth_optional, require_role
 from app.database import get_db
 from app.errors import AppError
 from app.models import Categoria, MovimientoInventario, Producto, VentaDetalle
-from app.schemas import EstadoUpdate, ProductoActualizar, ProductoCrear
+from app.schemas import (
+    EstadoUpdate,
+    ProductoActualizar,
+    ProductoCrear,
+    ProductoDetalleRespuesta,
+    ProductoEliminadoRespuesta,
+    ProductosRespuesta,
+    ProductoUnicoRespuesta,
+)
 from app.serializers import producto_dict
 from app.validations import limpiar_texto, validate_producto
 
@@ -34,6 +42,16 @@ ORDENES = {
     "nombre": (Producto.nombre, "asc"),
     "stock": (Producto.stock, "asc"),
 }
+
+
+def _al_azar(db: Session):
+    """Orden aleatorio, con el nombre que use cada motor.
+
+    MySQL la llama RAND() y SQLite (el que usan las pruebas con Pytest)
+    la llama RANDOM(). Preguntarle al dialecto evita que la consulta
+    dependa del motor.
+    """
+    return func.rand() if db.bind.dialect.name == "mysql" else func.random()
 
 
 def _find_by_id(db: Session, id_producto: int) -> Optional[Producto]:
@@ -75,7 +93,12 @@ def _registrar_movimiento(db, producto, stock_anterior, stock_nuevo, motivo, id_
 # ---------------------------------------------------------------
 # Consultas
 # ---------------------------------------------------------------
-@router.get("")
+@router.get(
+    "",
+    response_model=ProductosRespuesta,
+    summary="Catálogo con búsqueda, filtros y paginación",
+    response_description="Página de productos y los datos de paginación.",
+)
 def listar(
     db: Session = Depends(get_db),
     current_user: Optional[dict] = Depends(auth_optional),
@@ -162,9 +185,14 @@ def listar_marcas(db: Session = Depends(get_db)):
     return {"ok": True, "marcas": [{"marca": m, "total": t} for m, t in filas]}
 
 
-@router.get("/{id_producto}")
+@router.get(
+    "/{id_producto}",
+    response_model=ProductoDetalleRespuesta,
+    summary="Ficha de un producto y sus relacionados",
+    responses={404: {"description": "El producto no existe o está inactivo."}},
+)
 def obtener(
-    id_producto: int,
+    id_producto: Annotated[int, Path(ge=1, description="Identificador del producto.")],
     db: Session = Depends(get_db),
     current_user: Optional[dict] = Depends(auth_optional),
 ):
@@ -186,7 +214,7 @@ def obtener(
                 Producto.id_producto != producto.id_producto,
                 Producto.estado == "activo",
             )
-            .order_by(func.rand())
+            .order_by(_al_azar(db))
             .limit(4)
             .all()
         )
@@ -201,7 +229,17 @@ def obtener(
 # ---------------------------------------------------------------
 # Escritura (protegida por rol)
 # ---------------------------------------------------------------
-@router.post("", status_code=201)
+@router.post(
+    "",
+    status_code=201,
+    response_model=ProductoUnicoRespuesta,
+    summary="Crea un producto (administrador o empleado)",
+    responses={
+        400: {"description": "Datos inválidos."},
+        401: {"description": "Falta el token."},
+        403: {"description": "El rol no tiene permiso."},
+    },
+)
 def crear(
     body: ProductoCrear,
     db: Session = Depends(get_db),
@@ -242,9 +280,13 @@ def crear(
     return {"ok": True, "message": "Producto creado.", "producto": producto_dict(producto)}
 
 
-@router.put("/{id_producto}")
+@router.put(
+    "/{id_producto}",
+    response_model=ProductoUnicoRespuesta,
+    summary="Actualiza un producto completo",
+)
 def actualizar(
-    id_producto: int,
+    id_producto: Annotated[int, Path(ge=1, description="Identificador del producto.")],
     body: ProductoActualizar,
     db: Session = Depends(get_db),
     current_user: dict = Depends(require_role(*ROLES_GESTOR)),
@@ -284,9 +326,13 @@ def actualizar(
     return {"ok": True, "message": "Producto actualizado.", "producto": producto_dict(producto)}
 
 
-@router.patch("/{id_producto}/estado")
+@router.patch(
+    "/{id_producto}/estado",
+    response_model=ProductoUnicoRespuesta,
+    summary="Activa o desactiva un producto",
+)
 def cambiar_estado(
-    id_producto: int,
+    id_producto: Annotated[int, Path(ge=1, description="Identificador del producto.")],
     body: EstadoUpdate,
     db: Session = Depends(get_db),
     _user: dict = Depends(require_role(*ROLES_GESTOR)),
@@ -310,9 +356,13 @@ def cambiar_estado(
     }
 
 
-@router.delete("/{id_producto}")
+@router.delete(
+    "/{id_producto}",
+    response_model=ProductoEliminadoRespuesta,
+    summary="Elimina un producto; si ya se vendió, lo desactiva",
+)
 def eliminar(
-    id_producto: int,
+    id_producto: Annotated[int, Path(ge=1, description="Identificador del producto.")],
     db: Session = Depends(get_db),
     _user: dict = Depends(require_role("administrador")),
 ):

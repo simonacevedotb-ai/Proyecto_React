@@ -149,5 +149,8 @@ limite_codigo = RateLimiter(10, 600, "codigo", solo_fallos=True)
 # Probar codigos de recuperacion se cuenta aparte de pedirlos: quien falla
 # una vez no deberia quedarse sin poder solicitar otro correo.
 limite_codigo_reset = RateLimiter(10, 900, "reset_codigo", solo_fallos=True)
+# El asistente responde a visitantes sin cuenta: se limita por si acaso,
+# pero con holgura para que una conversacion normal no se corte.
+limite_chat = RateLimiter(30, 300, "chat", solo_fallos=False)
 limite_contacto = RateLimiter(10, 600, "contacto", solo_fallos=False)
 limite_compra = RateLimiter(30, 300, "compra", solo_fallos=False)

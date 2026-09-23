@@ -290,6 +290,118 @@ CREATE TABLE IF NOT EXISTS movimientos_inventario (
   INDEX idx_mov_tipo (tipo)
 ) ENGINE=InnoDB;
 
+-- ---------------------------------------------------------
+-- Tabla: facturas
+--   Documento que se emite a partir de una venta. Guarda una
+--   copia de los importes: si mañana cambia el precio de un
+--   producto o los datos del cliente, la factura ya emitida
+--   debe seguir diciendo lo mismo que el día que se expidió.
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS facturas (
+  id_factura INT AUTO_INCREMENT PRIMARY KEY,
+  numero VARCHAR(20) NOT NULL UNIQUE,
+  id_venta INT NOT NULL UNIQUE,
+  id_usuario INT NULL,
+  cliente_nombre VARCHAR(120) NOT NULL,
+  cliente_documento VARCHAR(20) NULL,
+  cliente_email VARCHAR(120) NOT NULL,
+  cliente_telefono VARCHAR(15) NULL,
+  cliente_direccion VARCHAR(150) NULL,
+  subtotal DECIMAL(12,2) NOT NULL DEFAULT 0,
+  descuento DECIMAL(12,2) NOT NULL DEFAULT 0,
+  impuestos DECIMAL(12,2) NOT NULL DEFAULT 0,
+  costo_envio DECIMAL(12,2) NOT NULL DEFAULT 0,
+  total DECIMAL(12,2) NOT NULL DEFAULT 0,
+  estado ENUM('emitida', 'pagada', 'anulada') NOT NULL DEFAULT 'emitida',
+  observaciones VARCHAR(255) NULL,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_factura_venta FOREIGN KEY (id_venta) REFERENCES ventas(id_venta)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_factura_usuario FOREIGN KEY (id_usuario)
+    REFERENCES usuarios(id_usuario) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT chk_facturas_total CHECK (`total` >= 0),
+  INDEX idx_facturas_numero (numero),
+  INDEX idx_facturas_estado (estado),
+  INDEX idx_facturas_creado (creado_en),
+  INDEX idx_facturas_cliente (cliente_email)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- Tabla: pqr
+--   Peticiones, quejas, reclamos y sugerencias. El radicado es
+--   el número con el que el cliente consulta su caso sin tener
+--   que iniciar sesión.
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS pqr (
+  id_pqr INT AUTO_INCREMENT PRIMARY KEY,
+  radicado VARCHAR(20) NOT NULL UNIQUE,
+  id_usuario INT NULL,
+  tipo ENUM('peticion', 'queja', 'reclamo', 'sugerencia') NOT NULL,
+  asunto VARCHAR(120) NOT NULL,
+  descripcion VARCHAR(1000) NOT NULL,
+  cliente_nombre VARCHAR(80) NOT NULL,
+  cliente_email VARCHAR(120) NOT NULL,
+  cliente_telefono VARCHAR(15) NULL,
+  id_venta INT NULL,
+  estado ENUM('pendiente', 'en_proceso', 'respondida', 'cerrada')
+    NOT NULL DEFAULT 'pendiente',
+  respuesta VARCHAR(1000) NULL,
+  id_responsable INT NULL,
+  respondida_en DATETIME NULL,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pqr_usuario FOREIGN KEY (id_usuario)
+    REFERENCES usuarios(id_usuario) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT fk_pqr_venta FOREIGN KEY (id_venta)
+    REFERENCES ventas(id_venta) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT fk_pqr_responsable FOREIGN KEY (id_responsable)
+    REFERENCES usuarios(id_usuario) ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_pqr_radicado (radicado),
+  INDEX idx_pqr_estado (estado),
+  INDEX idx_pqr_tipo (tipo),
+  INDEX idx_pqr_creado (creado_en),
+  INDEX idx_pqr_usuario (id_usuario)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- Tabla: conversaciones
+--   Cada charla con el asistente. Se identifica con una clave
+--   pública para que un visitante sin cuenta pueda continuar
+--   su conversación, y se enlaza al usuario cuando hay sesión.
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS conversaciones (
+  id_conversacion INT AUTO_INCREMENT PRIMARY KEY,
+  clave VARCHAR(43) NOT NULL UNIQUE,
+  id_usuario INT NULL,
+  titulo VARCHAR(120) NULL,
+  motor VARCHAR(30) NOT NULL DEFAULT 'catalogo',
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_conversacion_usuario FOREIGN KEY (id_usuario)
+    REFERENCES usuarios(id_usuario) ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_conversaciones_clave (clave),
+  INDEX idx_conversaciones_usuario (id_usuario)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- Tabla: mensajes_chat
+--   Cada turno de la conversación, en orden.
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS mensajes_chat (
+  id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+  id_conversacion INT NOT NULL,
+  autor ENUM('cliente', 'asistente') NOT NULL,
+  contenido VARCHAR(2000) NOT NULL,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_mensaje_conversacion FOREIGN KEY (id_conversacion)
+    REFERENCES conversaciones(id_conversacion) ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX idx_mensajes_conversacion (id_conversacion, id_mensaje)
+) ENGINE=InnoDB;
+
 -- =========================================================
 --  4. ATENCIÓN AL CLIENTE
 -- =========================================================
@@ -431,6 +543,12 @@ CALL ps_add_column('usuarios', 'email_verificado',
 CALL ps_add_column('usuarios', 'doble_factor',
                    'TINYINT(1) NOT NULL DEFAULT 0 AFTER `email_verificado`');
 CALL ps_add_index('usuarios', 'idx_usuarios_verificado', '`email_verificado`');
+
+-- ventas: descuentos e impuestos, que el quinto avance pide registrar
+CALL ps_add_column('ventas', 'descuento',
+                   'DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `subtotal`');
+CALL ps_add_column('ventas', 'impuestos',
+                   'DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `descuento`');
 
 -- password_resets: codigo de 6 digitos para restablecer sin abrir el enlace
 CALL ps_add_column('password_resets', 'codigo_hash',

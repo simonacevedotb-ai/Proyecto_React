@@ -205,6 +205,16 @@ function AdminProductos() {
     setErrorFormulario("");
     if (!validateAll()) return;
 
+    // El precio tachado solo tiene sentido si es mayor que el actual. El
+    // backend lo exige igual; avisarlo aquí ahorra el viaje al servidor.
+    if (values.precio_anterior && Number(values.precio_anterior) <= Number(values.precio)) {
+      setErrors((prev) => ({
+        ...prev,
+        precio_anterior: "Debe ser mayor que el precio actual (es el precio tachado).",
+      }));
+      return;
+    }
+
     const payload = {
       nombre: values.nombre.trim(),
       marca: values.marca.trim(),

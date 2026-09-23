@@ -5,8 +5,9 @@ name: CI - PhoneStore
 # Se ejecuta en cada push y en cada pull request sobre las ramas
 # principales, y comprueba tres cosas:
 #
-#   1. Backend  -> que instala, compila y arranca contra una base de
-#                  datos real, y que las 87 pruebas de la API pasan.
+#   1. Backend  -> que pasan las pruebas de Pytest, y que instala,
+#                  compila y arranca contra una base de datos real
+#                  superando las pruebas de punta a punta.
 #   2. Frontend -> que pasa ESLint sin errores y que compila para
 #                  producción.
 #   3. Base de datos -> que el script database/phonestore.sql se ejecuta
@@ -88,6 +89,12 @@ jobs:
       - name: Verificar que los módulos del backend importan
         working-directory: proyecto-react/backend-fastapi
         run: python -c "from app.main import app; print('Rutas registradas:', len(app.routes))"
+
+      # Estas no necesitan la base de datos ni el servidor: usan SQLite y
+      # TestClient. Si fallan, no tiene sentido seguir con el resto.
+      - name: Ejecutar las pruebas unitarias (Pytest)
+        working-directory: proyecto-react/backend-fastapi
+        run: pytest
 
       - name: Crear el administrador y el catálogo de ejemplo
         working-directory: proyecto-react/backend-fastapi
@@ -186,7 +193,7 @@ jobs:
 
       - name: Buscar credenciales escritas en el código
         run: |
-          patron='(JWT_SECRET|DB_PASSWORD|SMTP_PASSWORD)[[:space:]]*=[[:space:]]*["'"'"'][^"'"'"']{6,}'
+          patron='(JWT_SECRET|DB_PASSWORD|SMTP_PASSWORD|IA_API_KEY)[[:space:]]*=[[:space:]]*["'"'"'][^"'"'"']{6,}'
           hallazgos=$(grep -rInE "$patron" \
             --include='*.py' --include='*.js' --include='*.jsx' \
             proyecto-react/backend-fastapi/app proyecto-react/frontend/src || true)

@@ -1,7 +1,7 @@
 # Evidencia de pruebas de la API - PhoneStore
 
-**Fecha de ejecución:** 2026-09-11 13:46:05  
-**URL base:** `http://127.0.0.1:3001/api`  
+**Fecha de ejecución:** 2026-09-18 14:31:02  
+**URL base:** `http://127.0.0.1:3000/api`  
 **Resultado:** 87 de 87 pruebas superadas
 
 Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los endpoints de la API usando los métodos GET, POST, PUT, PATCH y DELETE, comprobando autenticación JWT, control de roles, validaciones del backend, control de stock e integridad de las ventas.
@@ -9,7 +9,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 | # | Método | Endpoint | Prueba | Esperado | Obtenido | Resultado |
 |---|--------|----------|--------|----------|----------|-----------|
 | 1 | GET | `/api/health` | La API responde | 200 | 200 | OK |
-| 2 | POST | `/api/auth/register` | Rechaza un registro con todos los campos inválidos | 400 | 400 | OK |
+| 2 | POST | `/api/auth/register` | Rechaza un registro con todos los campos inválidos | 422 | 422 | OK |
 | 3 | POST | `/api/auth/register` | Registra un cliente nuevo | 201 | 201 | OK |
 | 4 | POST | `/api/auth/register` | El registro público siempre asigna rol cliente | 201 | 201 | OK |
 | 5 | POST | `/api/auth/register` | La respuesta nunca incluye la contraseña ni su hash | 201 | 201 | OK |
@@ -26,60 +26,60 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 | 16 | GET | `/api/usuarios` | El administrador sí puede listar usuarios | 200 | 200 | OK |
 | 17 | GET | `/api/categorias` | Lista pública de categorías | 200 | 200 | OK |
 | 18 | POST | `/api/categorias` | Crea una categoría | 201 | 201 | OK |
-| 19 | PUT | `/api/categorias/38` | Edita la categoría | 200 | 200 | OK |
-| 20 | PATCH | `/api/categorias/38/estado` | Cambia el estado de la categoría | 200 | 200 | OK |
+| 19 | PUT | `/api/categorias/49` | Edita la categoría | 200 | 200 | OK |
+| 20 | PATCH | `/api/categorias/49/estado` | Cambia el estado de la categoría | 200 | 200 | OK |
 | 21 | GET | `/api/productos` | Catálogo público paginado | 200 | 200 | OK |
 | 22 | GET | `/api/productos?buscar=...` | Búsqueda y ordenamiento del catálogo | 200 | 200 | OK |
-| 23 | POST | `/api/productos` | Rechaza un producto con datos inválidos | 400 | 400 | OK |
+| 23 | POST | `/api/productos` | Rechaza un producto con datos inválidos | 422 | 422 | OK |
 | 24 | POST | `/api/productos` | Crea un producto | 201 | 201 | OK |
-| 25 | GET | `/api/productos/32` | Consulta un producto por id | 200 | 200 | OK |
-| 26 | PUT | `/api/productos/32` | Edita el producto | 200 | 200 | OK |
-| 27 | PATCH | `/api/productos/32/estado` | Desactiva el producto | 200 | 200 | OK |
-| 28 | PATCH | `/api/productos/32/estado` | Reactiva el producto | 200 | 200 | OK |
+| 25 | GET | `/api/productos/38` | Consulta un producto por id | 200 | 200 | OK |
+| 26 | PUT | `/api/productos/38` | Edita el producto | 200 | 200 | OK |
+| 27 | PATCH | `/api/productos/38/estado` | Desactiva el producto | 200 | 200 | OK |
+| 28 | PATCH | `/api/productos/38/estado` | Reactiva el producto | 200 | 200 | OK |
 | 29 | GET | `/api/productos/marcas` | Lista las marcas del catálogo | 200 | 200 | OK |
 | 30 | POST | `/api/inventario/movimientos` | Registra una entrada de inventario | 201 | 201 | OK |
 | 31 | POST | `/api/inventario/movimientos` | Impide retirar más stock del disponible | 409 | 409 | OK |
 | 32 | GET | `/api/inventario/movimientos` | Consulta el historial de movimientos | 200 | 200 | OK |
 | 33 | GET | `/api/inventario/alertas` | Consulta alertas de stock bajo y agotados | 200 | 200 | OK |
 | 34 | POST | `/api/ventas` | No se puede comprar sin iniciar sesión | 401 | 401 | OK |
-| 35 | POST | `/api/ventas` | Rechaza cantidades fuera de rango en el carrito | 400 | 400 | OK |
+| 35 | POST | `/api/ventas` | Rechaza cantidades fuera de rango en el carrito | 422 | 422 | OK |
 | 36 | POST | `/api/ventas` | Impide comprar más unidades de las disponibles | 409 | 409 | OK |
 | 37 | POST | `/api/ventas` | Registra la venta ignorando los precios enviados por el cliente | 201 | 201 | OK |
 | 38 | POST | `/api/ventas` | El precio guardado es el real (450.000), no el manipulado (1) | 201 | 201 | OK |
-| 39 | GET | `/api/productos/32` | El stock se descontó automáticamente tras la venta | 200 | 200 | OK |
+| 39 | GET | `/api/productos/38` | El stock se descontó automáticamente tras la venta | 200 | 200 | OK |
 | 40 | GET | `/api/ventas/mis-pedidos` | El cliente consulta sus propios pedidos | 200 | 200 | OK |
 | 41 | GET | `/api/ventas` | Un cliente NO puede listar todas las ventas | 403 | 403 | OK |
 | 42 | GET | `/api/ventas` | El administrador lista las ventas con paginación | 200 | 200 | OK |
-| 43 | GET | `/api/ventas/21` | Consulta el detalle de una venta | 200 | 200 | OK |
-| 44 | PATCH | `/api/ventas/21/estado` | Impide saltos de estado inválidos (pendiente -> entregada) | 409 | 409 | OK |
-| 45 | PATCH | `/api/ventas/21/estado` | Marca el pedido como pagado | 200 | 200 | OK |
-| 46 | PATCH | `/api/ventas/21/estado` | Cancela el pedido | 200 | 200 | OK |
-| 47 | GET | `/api/productos/32` | Al cancelar, las unidades vuelven al inventario | 200 | 200 | OK |
+| 43 | GET | `/api/ventas/36` | Consulta el detalle de una venta | 200 | 200 | OK |
+| 44 | PATCH | `/api/ventas/36/estado` | Impide saltos de estado inválidos (pendiente -> entregada) | 409 | 409 | OK |
+| 45 | PATCH | `/api/ventas/36/estado` | Marca el pedido como pagado | 200 | 200 | OK |
+| 46 | PATCH | `/api/ventas/36/estado` | Cancela el pedido | 200 | 200 | OK |
+| 47 | GET | `/api/productos/38` | Al cancelar, las unidades vuelven al inventario | 200 | 200 | OK |
 | 48 | GET | `/api/servicios` | Lista pública de servicios | 200 | 200 | OK |
 | 49 | POST | `/api/servicios` | Crea un servicio | 201 | 201 | OK |
-| 50 | PUT | `/api/servicios/25` | Edita el servicio | 200 | 200 | OK |
+| 50 | PUT | `/api/servicios/31` | Edita el servicio | 200 | 200 | OK |
 | 51 | POST | `/api/solicitudes` | El cliente agenda un servicio técnico | 201 | 201 | OK |
-| 52 | POST | `/api/solicitudes` | Valida los datos de la solicitud | 400 | 400 | OK |
+| 52 | POST | `/api/solicitudes` | Valida los datos de la solicitud | 422 | 422 | OK |
 | 53 | GET | `/api/solicitudes/mis-solicitudes` | El cliente ve sus solicitudes | 200 | 200 | OK |
 | 54 | GET | `/api/solicitudes` | El administrador lista las solicitudes | 200 | 200 | OK |
-| 55 | PATCH | `/api/solicitudes/18` | Atiende la solicitud desde el panel | 200 | 200 | OK |
+| 55 | PATCH | `/api/solicitudes/24` | Atiende la solicitud desde el panel | 200 | 200 | OK |
 | 56 | POST | `/api/contacto` | Envía un mensaje de contacto | 201 | 201 | OK |
 | 57 | POST | `/api/contacto` | Acepta el envío pero limpia el HTML (anti-XSS) | 201 | 201 | OK |
 | 58 | GET | `/api/contacto` | El administrador ve la bandeja de mensajes | 200 | 200 | OK |
 | 59 | GET | `/api/contacto` | Ningún mensaje guardado contiene etiquetas HTML ejecutables | 200 | 200 | OK |
-| 60 | PATCH | `/api/contacto/35/estado` | Marca un mensaje como leído | 200 | 200 | OK |
+| 60 | PATCH | `/api/contacto/47/estado` | Marca un mensaje como leído | 200 | 200 | OK |
 | 61 | GET | `/api/contacto` | Un cliente NO puede leer la bandeja de contacto | 403 | 403 | OK |
 | 62 | GET | `/api/dashboard/resumen` | Resumen del dashboard | 200 | 200 | OK |
 | 63 | GET | `/api/dashboard/reporte` | Reporte de ventas del mes | 200 | 200 | OK |
 | 64 | GET | `/api/dashboard/reporte` | Valida el rango de fechas del reporte | 400 | 400 | OK |
 | 65 | GET | `/api/usuarios?buscar=...` | Busca usuarios por correo | 200 | 200 | OK |
-| 66 | GET | `/api/usuarios/38` | Consulta un usuario por id | 200 | 200 | OK |
-| 67 | PUT | `/api/usuarios/38` | Edita un usuario | 200 | 200 | OK |
-| 68 | PATCH | `/api/usuarios/38/rol` | Cambia el rol a empleado | 200 | 200 | OK |
-| 69 | PATCH | `/api/usuarios/38/rol` | Rechaza un rol inexistente | 400 | 400 | OK |
-| 70 | PATCH | `/api/usuarios/38/estado` | Desactiva un usuario | 200 | 200 | OK |
+| 66 | GET | `/api/usuarios/58` | Consulta un usuario por id | 200 | 200 | OK |
+| 67 | PUT | `/api/usuarios/58` | Edita un usuario | 200 | 200 | OK |
+| 68 | PATCH | `/api/usuarios/58/rol` | Cambia el rol a empleado | 200 | 200 | OK |
+| 69 | PATCH | `/api/usuarios/58/rol` | Rechaza un rol inexistente | 400 | 400 | OK |
+| 70 | PATCH | `/api/usuarios/58/estado` | Desactiva un usuario | 200 | 200 | OK |
 | 71 | POST | `/api/auth/login` | Un usuario inactivo no puede iniciar sesión | 403 | 403 | OK |
-| 72 | PATCH | `/api/usuarios/38/estado` | Reactiva el usuario | 200 | 200 | OK |
+| 72 | PATCH | `/api/usuarios/58/estado` | Reactiva el usuario | 200 | 200 | OK |
 | 73 | PATCH | `/api/usuarios/1/estado` | El administrador no puede desactivarse a sí mismo | 400 | 400 | OK |
 | 74 | PUT | `/api/auth/perfil` | El usuario actualiza su propio perfil | 200 | 200 | OK |
 | 75 | PUT | `/api/auth/password` | Rechaza el cambio si la contraseña actual es incorrecta | 400 | 400 | OK |
@@ -89,11 +89,11 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 | 79 | POST | `/api/auth/recuperar-password` | La respuesta NO expone el token de recuperación | 200 | 200 | OK |
 | 80 | POST | `/api/auth/recuperar-password` | No revela si un correo existe o no | 200 | 200 | OK |
 | 81 | POST | `/api/auth/restablecer-password` | Rechaza un token de recuperación inválido | 400 | 400 | OK |
-| 82 | DELETE | `/api/servicios/25` | Un cliente NO puede eliminar servicios | 403 | 403 | OK |
-| 83 | DELETE | `/api/servicios/25` | El administrador elimina el servicio de prueba | 200 | 200 | OK |
-| 84 | DELETE | `/api/productos/32` | El producto con ventas se desactiva en vez de borrarse | 200 | 200 | OK |
-| 85 | DELETE | `/api/categorias/38` | No se puede borrar una categoría con productos | 409 | 409 | OK |
-| 86 | DELETE | `/api/usuarios/38` | El usuario con pedidos se desactiva en vez de borrarse | 200 | 200 | OK |
+| 82 | DELETE | `/api/servicios/31` | Un cliente NO puede eliminar servicios | 403 | 403 | OK |
+| 83 | DELETE | `/api/servicios/31` | El administrador elimina el servicio de prueba | 200 | 200 | OK |
+| 84 | DELETE | `/api/productos/38` | El producto con ventas se desactiva en vez de borrarse | 200 | 200 | OK |
+| 85 | DELETE | `/api/categorias/49` | No se puede borrar una categoría con productos | 409 | 409 | OK |
+| 86 | DELETE | `/api/usuarios/58` | El usuario con pedidos se desactiva en vez de borrarse | 200 | 200 | OK |
 | 87 | GET | `/api/productos/999999` | Un id inexistente devuelve 404 | 404 | 404 | OK |
 
 ## Detalle de las respuestas
@@ -112,9 +112,9 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 2. Rechaza un registro con todos los campos inválidos
 
-`POST /api/auth/register` → **400** (OK)
+`POST /api/auth/register` → **422** (OK)
 
-> El backend valida aunque el Frontend no lo haga
+> El esquema Pydantic rechaza los campos mal formados
 
 ```json
 {
@@ -122,9 +122,11 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "message": "Datos inválidos.",
   "errors": {
     "nombre": "Este campo debe tener al menos 2 caracteres.",
+    "tipoDocumento": "El tipo de documento debe ser uno de: CC, TI, CE, PA.",
     "numeroDocumento": "Este campo debe tener al menos 6 caracteres.",
     "direccion": "Este campo debe tener al menos 10 caracteres.",
     "telefono": "Este campo debe tener al menos 7 caracteres.",
+    "email": "Escribe un correo electrónico válido.",
     "password": "Este campo debe tener al menos 8 caracteres."
   }
 }
@@ -138,25 +140,25 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "Registro exitoso. Te enviamos un correo para confirmar tu cuenta.",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTIzODc2MywiaWF0IjoxNzg5MTUyMzYzfQ.yYJrjzrDu81qUCPaI_mEAyoDoOekHqU6FdjApsqHMPw",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.0cZpvitOT-nCxwosaz2BxS3tlmc1R4Rcki31fUrrOKY",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Pruebas",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 45 # 12-34 Medellin",
     "telefono": "3001234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 3,
     "rol": "cliente",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:03"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:00"
   },
-  "verificacion_enviada": false
+  "verificacion_enviada": true
 }
 ```
 
@@ -231,23 +233,23 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "Inicio de sesión exitoso.",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTIzODc2MywiaWF0IjoxNzg5MTUyMzYzfQ.yYJrjzrDu81qUCPaI_mEAyoDoOekHqU6FdjApsqHMPw",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImNsaWVudGUiLCJpZF9yb2wiOjMsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.0cZpvitOT-nCxwosaz2BxS3tlmc1R4Rcki31fUrrOKY",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Pruebas",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 45 # 12-34 Medellin",
     "telefono": "3001234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 3,
     "rol": "cliente",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:03"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:00"
   }
 }
 ```
@@ -260,21 +262,21 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Pruebas",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 45 # 12-34 Medellin",
     "telefono": "3001234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 3,
     "rol": "cliente",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:03"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:00"
   }
 }
 ```
@@ -309,7 +311,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "Inicio de sesión exitoso.",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJlbWFpbCI6InNpbW9uYWNldmVkb3RiQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpZF9yb2wiOjEsImV4cCI6MTc4OTIzODc2NCwiaWF0IjoxNzg5MTUyMzY0fQ.j2zX--wamxXhrXIu-XHhXtG7F3KuLdFN0OkMTmaXcuk",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJlbWFpbCI6InNpbW9uYWNldmVkb3RiQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpZF9yb2wiOjEsImV4cCI6MTc4OTg0NjI2MCwiaWF0IjoxNzg5NzU5ODYwfQ.HT3Z_noYl6hXOVyJheviW7-12CbM49w9pL8za1lxEh8",
   "usuario": {
     "id_usuario": 1,
     "nombre": "Simon",
@@ -374,45 +376,45 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "usuarios": [
     {
-      "id_usuario": 38,
+      "id_usuario": 58,
       "nombre": "Cliente",
       "apellido": "Pruebas",
       "tipo_documento": "CC",
-      "numero_documento": "189152363",
+      "numero_documento": "189759860",
       "direccion": "Calle 45 # 12-34 Medellin",
       "telefono": "3001234567",
-      "email": "cliente.test89152363@phonestore.com",
+      "email": "cliente.test89759860@phonestore.com",
       "email_verificado": false,
       "doble_factor": false,
       "estado": "activo",
       "id_rol": 3,
       "rol": "cliente",
-      "creado_en": "2026-09-11 13:46:03",
-      "actualizado_en": "2026-09-11 13:46:03"
+      "creado_en": "2026-09-18 14:31:00",
+      "actualizado_en": "2026-09-18 14:31:00"
     },
     {
-      "id_usuario": 37,
-      "nombre": "Cliente",
-      "apellido": "Perfil",
+      "id_usuario": 57,
+      "nombre": "Quinto",
+      "apellido": "Avance",
       "tipo_documento": "CC",
-      "numero_documento": "189152302",
-      "direccion": "Calle 10 # 20-30 Medellin",
-      "telefono": "3021234567",
-      "email": "cliente.test89152302@phonestore.com",
+      "numero_documento": "551427121",
+      "direccion": "Calle 45 numero 12-34",
+      "telefono": "3140009988",
+      "email": "cliente.test.quinto142712@phonestore.com",
       "email_verificado": false,
       "doble_factor": false,
-      "estado": "inactivo",
-      "id_rol": 2,
-      "rol": "empleado",
-      "creado_en": "2026-09-11 13:45:02",
-      "actualizado_en": "2026-09-11 13:45:04"
+      "estado": "activo",
+      "id_rol": 3,
+      "rol": "cliente",
+      "creado_en": "2026-09-18 14:27:12",
+      "actualizado_en": "2026-09-18 14:27:12"
     },
     {
-      "id_usuario": 31,
-      "nombre": "Diag",
+      "id_usuario": 56,
+      "nombre": "Correo",
       "apellido": "Prueba",
       "tipo_documento": "CC",
-      "numero_documento"
+      "numero_documento":
   ... (recortado)
 ```
 
@@ -479,13 +481,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "message": "Categoría creada.",
   "categoria": {
-    "id_categoria": 38,
-    "nombre": "Categoria Test 89152363",
-    "slug": "categoria-test-89152363",
+    "id_categoria": 49,
+    "nombre": "Categoria Test 89759860",
+    "slug": "categoria-test-89759860",
     "descripcion": "Categoría creada por las pruebas automatizadas",
     "icono": "phone",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
     "total_productos": 0
   }
 }
@@ -493,20 +495,20 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 19. Edita la categoría
 
-`PUT /api/categorias/38` → **200** (OK)
+`PUT /api/categorias/49` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Categoría actualizada.",
   "categoria": {
-    "id_categoria": 38,
-    "nombre": "Categoria Test 89152363 editada",
-    "slug": "categoria-test-89152363-editada",
+    "id_categoria": 49,
+    "nombre": "Categoria Test 89759860 editada",
+    "slug": "categoria-test-89759860-editada",
     "descripcion": "Descripción actualizada",
     "icono": "phone",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
     "total_productos": 0
   }
 }
@@ -514,20 +516,20 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 20. Cambia el estado de la categoría
 
-`PATCH /api/categorias/38/estado` → **200** (OK)
+`PATCH /api/categorias/49/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Categoría marcada como inactivo.",
   "categoria": {
-    "id_categoria": 38,
-    "nombre": "Categoria Test 89152363 editada",
-    "slug": "categoria-test-89152363-editada",
+    "id_categoria": 49,
+    "nombre": "Categoria Test 89759860 editada",
+    "slug": "categoria-test-89759860-editada",
     "descripcion": "Descripción actualizada",
     "icono": "phone",
     "estado": "inactivo",
-    "creado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
     "total_productos": 0
   }
 }
@@ -550,14 +552,14 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "descripcion": "Pantalla Liquid Retina de 10.9\", chip A14 Bionic y 64 GB.",
       "precio": 2100000.0,
       "precio_anterior": null,
-      "stock": 6,
+      "stock": 1,
       "stock_minimo": 5,
-      "estado_stock": "disponible",
+      "estado_stock": "bajo",
       "destacado": false,
       "imagen_url": "/img/ipad-10.jpg",
       "estado": "activo",
       "creado_en": "2026-09-08 19:10:30",
-      "actualizado_en": "2026-09-10 12:57:53"
+      "actualizado_en": "2026-09-18 12:29:01"
     },
     {
       "id_producto": 11,
@@ -568,18 +570,18 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "descripcion": "Tres puertos, tecnología GaN y protección contra sobrecarga.",
       "precio": 180000.0,
       "precio_anterior": 220000.0,
-      "stock": 39,
+      "stock": 32,
       "stock_minimo": 5,
       "estado_stock": "disponible",
       "destacado": false,
       "imagen_url": "/img/cargador-gan.jpg",
       "estado": "activo",
       "creado_en": "2026-09-08 19:10:30",
-      "actualizado_en": "2026-09-10 12:57:53"
+      "actualizado_en": "2026-09-18 14:27:13"
     },
     {
       "id_producto": 10,
-    
+      "nom
   ... (recortado)
 ```
 
@@ -638,7 +640,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 23. Rechaza un producto con datos inválidos
 
-`POST /api/productos` → **400** (OK)
+`POST /api/productos` → **422** (OK)
 
 > Precio negativo y nombre muy corto
 
@@ -664,11 +666,11 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "message": "Producto creado.",
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Producto creado por las pruebas automatizadas",
     "precio": 500000.0,
     "precio_anterior": null,
@@ -678,25 +680,25 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": false,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
 
 ### 25. Consulta un producto por id
 
-`GET /api/productos/32` → **200** (OK)
+`GET /api/productos/38` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Producto creado por las pruebas automatizadas",
     "precio": 500000.0,
     "precio_anterior": null,
@@ -706,8 +708,8 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": false,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   },
   "relacionados": []
 }
@@ -715,18 +717,18 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 26. Edita el producto
 
-`PUT /api/productos/32` → **200** (OK)
+`PUT /api/productos/38` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Producto actualizado.",
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363 editado",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860 editado",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Descripción actualizada por las pruebas",
     "precio": 450000.0,
     "precio_anterior": null,
@@ -736,26 +738,26 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": true,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
 
 ### 27. Desactiva el producto
 
-`PATCH /api/productos/32/estado` → **200** (OK)
+`PATCH /api/productos/38/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Producto marcado como inactivo.",
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363 editado",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860 editado",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Descripción actualizada por las pruebas",
     "precio": 450000.0,
     "precio_anterior": null,
@@ -765,26 +767,26 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": true,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "inactivo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
 
 ### 28. Reactiva el producto
 
-`PATCH /api/productos/32/estado` → **200** (OK)
+`PATCH /api/productos/38/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Producto marcado como activo.",
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363 editado",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860 editado",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Descripción actualizada por las pruebas",
     "precio": 450000.0,
     "precio_anterior": null,
@@ -794,8 +796,8 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": true,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
@@ -843,9 +845,9 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "message": "Inventario actualizado: 10 → 15 unidades.",
   "movimiento": {
-    "id_movimiento": 81,
-    "id_producto": 32,
-    "producto": "Producto Test 89152363 editado",
+    "id_movimiento": 121,
+    "id_producto": 38,
+    "producto": "Producto Test 89759860 editado",
     "tipo": "entrada",
     "cantidad": 5,
     "stock_anterior": 10,
@@ -854,14 +856,14 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "id_venta": null,
     "id_usuario": 1,
     "usuario": "Simon Acevedo",
-    "creado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01"
   },
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363 editado",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860 editado",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Descripción actualizada por las pruebas",
     "precio": 450000.0,
     "precio_anterior": null,
@@ -871,8 +873,8 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": true,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
@@ -900,9 +902,9 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "movimientos": [
     {
-      "id_movimiento": 81,
-      "id_producto": 32,
-      "producto": "Producto Test 89152363 editado",
+      "id_movimiento": 121,
+      "id_producto": 38,
+      "producto": "Producto Test 89759860 editado",
       "tipo": "entrada",
       "cantidad": 5,
       "stock_anterior": 10,
@@ -911,12 +913,12 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "id_venta": null,
       "id_usuario": 1,
       "usuario": "Simon Acevedo",
-      "creado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01"
     },
     {
-      "id_movimiento": 80,
-      "id_producto": 32,
-      "producto": "Producto Test 89152363 editado",
+      "id_movimiento": 120,
+      "id_producto": 38,
+      "producto": "Producto Test 89759860 editado",
       "tipo": "entrada",
       "cantidad": 10,
       "stock_anterior": 0,
@@ -925,7 +927,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "id_venta": null,
       "id_usuario": 1,
       "usuario": "Simon Acevedo",
-      "creado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01"
     }
   ],
   "paginacion": {
@@ -945,10 +947,29 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "agotados": [],
-  "stock_bajo": [],
+  "stock_bajo": [
+    {
+      "id_producto": 12,
+      "nombre": "iPad 10ma generación",
+      "marca": "Apple",
+      "id_categoria": 5,
+      "categoria": "Tablets",
+      "descripcion": "Pantalla Liquid Retina de 10.9\", chip A14 Bionic y 64 GB.",
+      "precio": 2100000.0,
+      "precio_anterior": null,
+      "stock": 1,
+      "stock_minimo": 5,
+      "estado_stock": "bajo",
+      "destacado": false,
+      "imagen_url": "/img/ipad-10.jpg",
+      "estado": "activo",
+      "creado_en": "2026-09-08 19:10:30",
+      "actualizado_en": "2026-09-18 12:29:01"
+    }
+  ],
   "totales": {
     "agotados": 0,
-    "stock_bajo": 0
+    "stock_bajo": 1
   }
 }
 ```
@@ -966,7 +987,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 35. Rechaza cantidades fuera de rango en el carrito
 
-`POST /api/ventas` → **400** (OK)
+`POST /api/ventas` → **422** (OK)
 
 > El esquema limita la cantidad por línea
 
@@ -991,7 +1012,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": false,
   "message": "Algunos productos ya no están disponibles en la cantidad solicitada.",
   "errors": {
-    "32": "Solo quedan 15 unidad(es) de \"Producto Test 89152363 editado\"."
+    "38": "Solo quedan 15 unidad(es) de \"Producto Test 89759860 editado\"."
   }
 }
 ```
@@ -1005,15 +1026,15 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 ```json
 {
   "ok": true,
-  "message": "¡Pedido PS-20260911-3687 registrado correctamente!",
+  "message": "¡Pedido PS-20260918-1153 registrado correctamente!",
   "venta": {
-    "id_venta": 21,
-    "codigo": "PS-20260911-3687",
-    "id_usuario": 38,
+    "id_venta": 36,
+    "codigo": "PS-20260918-1153",
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
-    "cliente_documento": "189152363",
+    "cliente_documento": "189759860",
     "direccion_envio": "Calle 45 # 12-34 Medellin",
     "ciudad": "Medellin",
     "notas": "Pedido generado por las pruebas automatizadas",
@@ -1023,13 +1044,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "total": 915000.0,
     "total_articulos": 2,
     "estado": "pendiente",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01",
     "detalles": [
       {
-        "id_detalle": 22,
-        "id_producto": 32,
-        "nombre_producto": "Producto Test 89152363 editado",
+        "id_detalle": 44,
+        "id_producto": 38,
+        "nombre_producto": "Producto Test 89759860 editado",
         "marca_producto": "MarcaTest",
         "precio_unitario": 450000.0,
         "cantidad": 2,
@@ -1053,7 +1074,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 39. El stock se descontó automáticamente tras la venta
 
-`GET /api/productos/32` → **200** (OK)
+`GET /api/productos/38` → **200** (OK)
 
 ```json
 {
@@ -1071,13 +1092,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "ventas": [
     {
-      "id_venta": 21,
-      "codigo": "PS-20260911-3687",
-      "id_usuario": 38,
+      "id_venta": 36,
+      "codigo": "PS-20260918-1153",
+      "id_usuario": 58,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152363@phonestore.com",
+      "cliente_email": "cliente.test89759860@phonestore.com",
       "cliente_telefono": "3001234567",
-      "cliente_documento": "189152363",
+      "cliente_documento": "189759860",
       "direccion_envio": "Calle 45 # 12-34 Medellin",
       "ciudad": "Medellin",
       "notas": "Pedido generado por las pruebas automatizadas",
@@ -1087,13 +1108,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "total": 915000.0,
       "total_articulos": 2,
       "estado": "pendiente",
-      "creado_en": "2026-09-11 13:46:04",
-      "actualizado_en": "2026-09-11 13:46:04",
+      "creado_en": "2026-09-18 14:31:01",
+      "actualizado_en": "2026-09-18 14:31:01",
       "detalles": [
         {
-          "id_detalle": 22,
-          "id_producto": 32,
-          "nombre_producto": "Producto Test 89152363 editado",
+          "id_detalle": 44,
+          "id_producto": 38,
+          "nombre_producto": "Producto Test 89759860 editado",
           "marca_producto": "MarcaTest",
           "precio_unitario": 450000.0,
           "cantidad": 2,
@@ -1125,13 +1146,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "ventas": [
     {
-      "id_venta": 21,
-      "codigo": "PS-20260911-3687",
-      "id_usuario": 38,
+      "id_venta": 36,
+      "codigo": "PS-20260918-1153",
+      "id_usuario": 58,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152363@phonestore.com",
+      "cliente_email": "cliente.test89759860@phonestore.com",
       "cliente_telefono": "3001234567",
-      "cliente_documento": "189152363",
+      "cliente_documento": "189759860",
       "direccion_envio": "Calle 45 # 12-34 Medellin",
       "ciudad": "Medellin",
       "notas": "Pedido generado por las pruebas automatizadas",
@@ -1141,13 +1162,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       "total": 915000.0,
       "total_articulos": 2,
       "estado": "pendiente",
-      "creado_en": "2026-09-11 13:46:04",
-      "actualizado_en": "2026-09-11 13:46:04",
+      "creado_en": "2026-09-18 14:31:01",
+      "actualizado_en": "2026-09-18 14:31:01",
       "detalles": [
         {
-          "id_detalle": 22,
-          "id_producto": 32,
-          "nombre_producto": "Producto Test 89152363 editado",
+          "id_detalle": 44,
+          "id_producto": 38,
+          "nombre_producto": "Producto Test 89759860 editado",
           "marca_producto": "MarcaTest",
           "precio_unitario": 450000.0,
           "cantidad": 2,
@@ -1156,17 +1177,17 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
       ]
     },
     {
-      "id_venta": 20,
-      "codigo": "PS-20260911-8617",
-      "id_usuario": 37,
-      "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test891523
+      "id_venta": 35,
+      "codigo": "PS-20260918-7950",
+      "id_usuario": 57,
+      "cliente_nombre": "Quinto Avance",
+      "cliente_email": "cliente.test.quinto1
   ... (recortado)
 ```
 
 ### 43. Consulta el detalle de una venta
 
-`GET /api/ventas/21` → **200** (OK)
+`GET /api/ventas/36` → **200** (OK)
 
 > Incluye productos, cantidades y precios de la compra
 
@@ -1174,13 +1195,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "venta": {
-    "id_venta": 21,
-    "codigo": "PS-20260911-3687",
-    "id_usuario": 38,
+    "id_venta": 36,
+    "codigo": "PS-20260918-1153",
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
-    "cliente_documento": "189152363",
+    "cliente_documento": "189759860",
     "direccion_envio": "Calle 45 # 12-34 Medellin",
     "ciudad": "Medellin",
     "notas": "Pedido generado por las pruebas automatizadas",
@@ -1190,13 +1211,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "total": 915000.0,
     "total_articulos": 2,
     "estado": "pendiente",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01",
     "detalles": [
       {
-        "id_detalle": 22,
-        "id_producto": 32,
-        "nombre_producto": "Producto Test 89152363 editado",
+        "id_detalle": 44,
+        "id_producto": 38,
+        "nombre_producto": "Producto Test 89759860 editado",
         "marca_producto": "MarcaTest",
         "precio_unitario": 450000.0,
         "cantidad": 2,
@@ -1209,7 +1230,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 44. Impide saltos de estado inválidos (pendiente -> entregada)
 
-`PATCH /api/ventas/21/estado` → **409** (OK)
+`PATCH /api/ventas/36/estado` → **409** (OK)
 
 ```json
 {
@@ -1220,20 +1241,20 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 45. Marca el pedido como pagado
 
-`PATCH /api/ventas/21/estado` → **200** (OK)
+`PATCH /api/ventas/36/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Pedido marcado como pagada.",
   "venta": {
-    "id_venta": 21,
-    "codigo": "PS-20260911-3687",
-    "id_usuario": 38,
+    "id_venta": 36,
+    "codigo": "PS-20260918-1153",
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
-    "cliente_documento": "189152363",
+    "cliente_documento": "189759860",
     "direccion_envio": "Calle 45 # 12-34 Medellin",
     "ciudad": "Medellin",
     "notas": "Pedido generado por las pruebas automatizadas",
@@ -1243,13 +1264,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "total": 915000.0,
     "total_articulos": 2,
     "estado": "pagada",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01",
     "detalles": [
       {
-        "id_detalle": 22,
-        "id_producto": 32,
-        "nombre_producto": "Producto Test 89152363 editado",
+        "id_detalle": 44,
+        "id_producto": 38,
+        "nombre_producto": "Producto Test 89759860 editado",
         "marca_producto": "MarcaTest",
         "precio_unitario": 450000.0,
         "cantidad": 2,
@@ -1262,20 +1283,20 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 46. Cancela el pedido
 
-`PATCH /api/ventas/21/estado` → **200** (OK)
+`PATCH /api/ventas/36/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Pedido marcado como cancelada.",
   "venta": {
-    "id_venta": 21,
-    "codigo": "PS-20260911-3687",
-    "id_usuario": 38,
+    "id_venta": 36,
+    "codigo": "PS-20260918-1153",
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
-    "cliente_documento": "189152363",
+    "cliente_documento": "189759860",
     "direccion_envio": "Calle 45 # 12-34 Medellin",
     "ciudad": "Medellin",
     "notas": "Pedido generado por las pruebas automatizadas",
@@ -1285,13 +1306,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "total": 915000.0,
     "total_articulos": 2,
     "estado": "cancelada",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04",
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01",
     "detalles": [
       {
-        "id_detalle": 22,
-        "id_producto": 32,
-        "nombre_producto": "Producto Test 89152363 editado",
+        "id_detalle": 44,
+        "id_producto": 38,
+        "nombre_producto": "Producto Test 89759860 editado",
         "marca_producto": "MarcaTest",
         "precio_unitario": 450000.0,
         "cantidad": 2,
@@ -1304,7 +1325,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 47. Al cancelar, las unidades vuelven al inventario
 
-`GET /api/productos/32` → **200** (OK)
+`GET /api/productos/38` → **200** (OK)
 
 ```json
 {
@@ -1372,39 +1393,39 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "message": "Servicio creado.",
   "servicio": {
-    "id_servicio": 25,
-    "nombre": "Servicio Test 89152363",
+    "id_servicio": 31,
+    "nombre": "Servicio Test 89759860",
     "descripcion": "Servicio creado por las pruebas automatizadas",
     "precio": 90000.0,
     "duracion": "1 hora",
     "icono": "search",
     "imagen_url": null,
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
 
 ### 50. Edita el servicio
 
-`PUT /api/servicios/25` → **200** (OK)
+`PUT /api/servicios/31` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Servicio actualizado.",
   "servicio": {
-    "id_servicio": 25,
-    "nombre": "Servicio Test 89152363 editado",
+    "id_servicio": 31,
+    "nombre": "Servicio Test 89759860 editado",
     "descripcion": "Descripción actualizada",
     "precio": 95000.0,
     "duracion": "2 horas",
     "icono": "search",
     "imagen_url": null,
     "estado": "activo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
@@ -1416,30 +1437,30 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 ```json
 {
   "ok": true,
-  "message": "Solicitud SV-20260911-1050 registrada. Nuestro equipo técnico te contactará muy pronto.",
+  "message": "Solicitud SV-20260918-2652 registrada. Nuestro equipo técnico te contactará muy pronto.",
   "solicitud": {
-    "id_solicitud": 18,
-    "codigo": "SV-20260911-1050",
+    "id_solicitud": 24,
+    "codigo": "SV-20260918-2652",
     "id_servicio": 1,
     "nombre_servicio": "Cambio de pantalla",
     "precio_servicio": 250000.0,
-    "id_usuario": 38,
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
     "equipo": "iPhone 13 Pro",
     "descripcion": "La pantalla no responde al tacto en la zona inferior.",
     "respuesta": null,
     "estado": "pendiente",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
 
 ### 52. Valida los datos de la solicitud
 
-`POST /api/solicitudes` → **400** (OK)
+`POST /api/solicitudes` → **422** (OK)
 
 ```json
 {
@@ -1447,6 +1468,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "message": "Datos inválidos.",
   "errors": {
     "cliente_nombre": "Este campo debe tener al menos 3 caracteres.",
+    "cliente_email": "Escribe un correo electrónico válido.",
     "cliente_telefono": "Este campo debe tener al menos 7 caracteres.",
     "descripcion": "Este campo debe tener al menos 10 caracteres."
   }
@@ -1462,21 +1484,21 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "solicitudes": [
     {
-      "id_solicitud": 18,
-      "codigo": "SV-20260911-1050",
+      "id_solicitud": 24,
+      "codigo": "SV-20260918-2652",
       "id_servicio": 1,
       "nombre_servicio": "Cambio de pantalla",
       "precio_servicio": 250000.0,
-      "id_usuario": 38,
+      "id_usuario": 58,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152363@phonestore.com",
+      "cliente_email": "cliente.test89759860@phonestore.com",
       "cliente_telefono": "3001234567",
       "equipo": "iPhone 13 Pro",
       "descripcion": "La pantalla no responde al tacto en la zona inferior.",
       "respuesta": null,
       "estado": "pendiente",
-      "creado_en": "2026-09-11 13:46:04",
-      "actualizado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01",
+      "actualizado_en": "2026-09-18 14:31:01"
     }
   ]
 }
@@ -1491,31 +1513,31 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "solicitudes": [
     {
-      "id_solicitud": 18,
-      "codigo": "SV-20260911-1050",
+      "id_solicitud": 24,
+      "codigo": "SV-20260918-2652",
       "id_servicio": 1,
       "nombre_servicio": "Cambio de pantalla",
       "precio_servicio": 250000.0,
-      "id_usuario": 38,
+      "id_usuario": 58,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152363@phonestore.com",
+      "cliente_email": "cliente.test89759860@phonestore.com",
       "cliente_telefono": "3001234567",
       "equipo": "iPhone 13 Pro",
       "descripcion": "La pantalla no responde al tacto en la zona inferior.",
       "respuesta": null,
       "estado": "pendiente",
-      "creado_en": "2026-09-11 13:46:04",
-      "actualizado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01",
+      "actualizado_en": "2026-09-18 14:31:01"
     },
     {
-      "id_solicitud": 17,
-      "codigo": "SV-20260911-2923",
+      "id_solicitud": 23,
+      "codigo": "SV-20260918-8695",
       "id_servicio": 1,
       "nombre_servicio": "Cambio de pantalla",
       "precio_servicio": 250000.0,
-      "id_usuario": 37,
+      "id_usuario": 55,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152302@phonestore.com",
+      "cliente_email": "cliente.test89759627@phonestore.com",
       "cliente_telefono": "3001234567",
       "equipo": "iPhone 13 Pro",
       "descripcion": "La pantalla no responde al tacto en la zona inferior.",
@@ -1526,28 +1548,28 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 55. Atiende la solicitud desde el panel
 
-`PATCH /api/solicitudes/18` → **200** (OK)
+`PATCH /api/solicitudes/24` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Solicitud actualizada.",
   "solicitud": {
-    "id_solicitud": 18,
-    "codigo": "SV-20260911-1050",
+    "id_solicitud": 24,
+    "codigo": "SV-20260918-2652",
     "id_servicio": 1,
     "nombre_servicio": "Cambio de pantalla",
     "precio_servicio": 250000.0,
-    "id_usuario": 38,
+    "id_usuario": 58,
     "cliente_nombre": "Cliente Pruebas",
-    "cliente_email": "cliente.test89152363@phonestore.com",
+    "cliente_email": "cliente.test89759860@phonestore.com",
     "cliente_telefono": "3001234567",
     "equipo": "iPhone 13 Pro",
     "descripcion": "La pantalla no responde al tacto en la zona inferior.",
     "respuesta": "Recibimos tu equipo, el diagnóstico estará listo mañana.",
     "estado": "en_proceso",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:01"
   }
 }
 ```
@@ -1560,7 +1582,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "¡Mensaje enviado! Te responderemos al correo que registraste.",
-  "mensaje_id": 34
+  "mensaje_id": 46
 }
 ```
 
@@ -1574,7 +1596,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "¡Mensaje enviado! Te responderemos al correo que registraste.",
-  "mensaje_id": 35
+  "mensaje_id": 47
 }
 ```
 
@@ -1587,37 +1609,37 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "mensajes": [
     {
-      "id_mensaje": 35,
+      "id_mensaje": 47,
       "nombre": "alert(1)",
       "email": "xss@example.com",
       "telefono": null,
       "asunto": "",
       "mensaje": "document.cookie intento de inyección de código.",
       "estado": "nuevo",
-      "creado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01"
     },
     {
-      "id_mensaje": 34,
+      "id_mensaje": 46,
       "nombre": "Visitante de prueba",
       "email": "visitante@example.com",
       "telefono": "3009998877",
       "asunto": "Consulta sobre garantías",
       "mensaje": "Quisiera saber si los equipos tienen garantía extendida disponible.",
       "estado": "nuevo",
-      "creado_en": "2026-09-11 13:46:04"
+      "creado_en": "2026-09-18 14:31:01"
     },
     {
-      "id_mensaje": 33,
+      "id_mensaje": 45,
       "nombre": "alert(1)",
       "email": "xss@example.com",
       "telefono": null,
       "asunto": "",
       "mensaje": "document.cookie intento de inyección de código.",
       "estado": "leido",
-      "creado_en": "2026-09-11 13:45:03"
+      "creado_en": "2026-09-18 14:27:09"
     },
     {
-      "id_mensaje": 32,
+      "id_mensaje": 44,
       "nombre": "Visitante de prueba",
       "email": "visitante@example.com",
       "telefono": "3009998877",
@@ -1638,21 +1660,21 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 60. Marca un mensaje como leído
 
-`PATCH /api/contacto/35/estado` → **200** (OK)
+`PATCH /api/contacto/47/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Mensaje actualizado.",
   "mensaje": {
-    "id_mensaje": 35,
+    "id_mensaje": 47,
     "nombre": "alert(1)",
     "email": "xss@example.com",
     "telefono": null,
     "asunto": "",
     "mensaje": "document.cookie intento de inyección de código.",
     "estado": "leido",
-    "creado_en": "2026-09-11 13:46:04"
+    "creado_en": "2026-09-18 14:31:01"
   }
 }
 ```
@@ -1676,18 +1698,18 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "ventas": {
-    "ingresos_totales": 5495000.0,
-    "pedidos_totales": 3,
-    "ingresos_hoy": 0.0,
-    "pedidos_hoy": 0,
-    "ingresos_mes": 5495000.0,
-    "pedidos_mes": 3,
-    "ticket_promedio": 1831666.67,
-    "variacion_dia": -100.0,
+    "ingresos_totales": 13190000.0,
+    "pedidos_totales": 6,
+    "ingresos_hoy": 1295000.0,
+    "pedidos_hoy": 1,
+    "ingresos_mes": 13190000.0,
+    "pedidos_mes": 6,
+    "ticket_promedio": 2198333.33,
+    "variacion_dia": 100.0,
     "variacion_mes": 100.0,
-    "pendientes": 2,
+    "pendientes": 5,
     "por_estado": {
-      "pendiente": 2,
+      "pendiente": 5,
       "pagada": 1,
       "enviada": 0,
       "entregada": 0,
@@ -1698,42 +1720,44 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "total_productos": 11,
     "productos_activos": 10,
     "agotados": 0,
-    "stock_bajo": 0,
-    "valor_inventario": 268420000.0
+    "stock_bajo": 1,
+    "valor_inventario": 248060000.0
   },
   "usuarios": {
-    "total": 9,
-    "activos": 8,
-    "clientes": 5,
-    "nuevos_mes": 6
+    "total": 12,
+    "activos": 11,
+    "clientes": 8,
+    "nuevos_mes": 9
   },
   "atencion": {
     "solicitudes_pendientes": 0,
     "mensajes_nuevos": 2
   },
+  "facturacion": {
+    "emitidas": 1,
+    "facturado": 0.0,
+    "pendientes_de_pago": 0,
+    "ventas_sin_factura": 5
+  },
+  "pqr": {
+    "total": 1,
+    "abiertas": 0,
+    "por_estado": {
+      "pendiente": 0,
+      "en_proceso": 0,
+      "respondida": 1,
+      "cerrada": 0
+    },
+    "por_tipo": {
+      "peticion": 0,
+      "queja": 0,
+      "reclamo": 1,
+      "sugerencia": 0
+    }
+  },
   "series": {
     "dias": [
-      {
-        "fecha": "2026-08-29",
-        "etiqueta": "29/08",
-        "total": 0.0,
-        "pedidos": 0
-      },
-      {
-        "fecha": "2026-08-30",
-        "etiqueta": "30/08",
-        "total": 0.0,
-        "pedidos": 0
-      },
-      {
-        "fecha": "2026-08-31",
-        "etiqueta": "31/08",
-        "total": 0.0,
-        "pedidos": 0
-      },
-      {
-        "fecha": "2026-09-01",
-      
+    
   ... (recortado)
 ```
 
@@ -1746,18 +1770,18 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "rango": {
     "desde": "2026-09-01",
-    "hasta": "2026-09-11"
+    "hasta": "2026-09-18"
   },
   "totales": {
-    "pedidos": 5,
-    "ingresos": 5495000.0,
-    "articulos": 4
+    "pedidos": 8,
+    "ingresos": 13190000.0,
+    "articulos": 8
   },
   "por_metodo_pago": [
     {
       "metodo": "contraentrega",
-      "pedidos": 2,
-      "total": 4380000.0
+      "pedidos": 5,
+      "total": 12075000.0
     },
     {
       "metodo": "transferencia",
@@ -1767,6 +1791,12 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   ],
   "productos": [
     {
+      "nombre": "Galaxy S24",
+      "marca": "Samsung",
+      "unidades": 2,
+      "ingresos": 6400000.0
+    },
+    {
       "nombre": "iPad 10ma generación",
       "marca": "Apple",
       "unidades": 2,
@@ -1775,28 +1805,26 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     {
       "nombre": "Galaxy Watch 6",
       "marca": "Samsung",
-      "unidades": 1,
-      "ingresos": 1100000.0
+      "unidades": 2,
+      "ingresos": 2200000.0
     },
     {
       "nombre": "Cargador rápido 65W GaN",
       "marca": "Ugreen",
-      "unidades": 1,
-      "ingresos": 180000.0
+      "unidades": 2,
+      "ingresos": 360000.0
     }
   ],
   "ventas": [
     {
-      "id_venta": 21,
-      "codigo": "PS-20260911-3687",
-      "id_usuario": 38,
+      "id_venta": 36,
+      "codigo": "PS-20260918-1153",
+      "id_usuario": 58,
       "cliente_nombre": "Cliente Pruebas",
-      "cliente_email": "cliente.test89152363@phonestore.com",
+      "cliente_email": "cliente.test89759860@phonestore.com",
       "cliente_telefono": "3001234567",
-      "cliente_documento": "189152363",
-      "direccion_envio": "Calle 45 # 12-34 Medellin",
-      "ciudad": "Medellin",
-      "notas": "Pedido generado por las pruebas autom
+      "cliente_documento": "189759860",
+      "direccio
   ... (recortado)
 ```
 
@@ -1820,21 +1848,21 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "usuarios": [
     {
-      "id_usuario": 38,
+      "id_usuario": 58,
       "nombre": "Cliente",
       "apellido": "Pruebas",
       "tipo_documento": "CC",
-      "numero_documento": "189152363",
+      "numero_documento": "189759860",
       "direccion": "Calle 45 # 12-34 Medellin",
       "telefono": "3001234567",
-      "email": "cliente.test89152363@phonestore.com",
+      "email": "cliente.test89759860@phonestore.com",
       "email_verificado": false,
       "doble_factor": false,
       "estado": "activo",
       "id_rol": 3,
       "rol": "cliente",
-      "creado_en": "2026-09-11 13:46:03",
-      "actualizado_en": "2026-09-11 13:46:03"
+      "creado_en": "2026-09-18 14:31:00",
+      "actualizado_en": "2026-09-18 14:31:00"
     }
   ],
   "paginacion": {
@@ -1848,27 +1876,27 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 66. Consulta un usuario por id
 
-`GET /api/usuarios/38` → **200** (OK)
+`GET /api/usuarios/58` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Pruebas",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 45 # 12-34 Medellin",
     "telefono": "3001234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 3,
     "rol": "cliente",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:03",
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:00",
     "total_pedidos": 1
   }
 }
@@ -1876,63 +1904,63 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 67. Edita un usuario
 
-`PUT /api/usuarios/38` → **200** (OK)
+`PUT /api/usuarios/58` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Usuario actualizado.",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Editado",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Carrera 70 # 30-20 Medellin",
     "telefono": "3011234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 3,
     "rol": "cliente",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
 
 ### 68. Cambia el rol a empleado
 
-`PATCH /api/usuarios/38/rol` → **200** (OK)
+`PATCH /api/usuarios/58/rol` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Rol actualizado.",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Editado",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Carrera 70 # 30-20 Medellin",
     "telefono": "3011234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
 
 ### 69. Rechaza un rol inexistente
 
-`PATCH /api/usuarios/38/rol` → **400** (OK)
+`PATCH /api/usuarios/58/rol` → **400** (OK)
 
 ```json
 {
@@ -1946,28 +1974,28 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 70. Desactiva un usuario
 
-`PATCH /api/usuarios/38/estado` → **200** (OK)
+`PATCH /api/usuarios/58/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Usuario marcado como inactivo.",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Editado",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Carrera 70 # 30-20 Medellin",
     "telefono": "3011234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "inactivo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
@@ -1985,28 +2013,28 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 72. Reactiva el usuario
 
-`PATCH /api/usuarios/38/estado` → **200** (OK)
+`PATCH /api/usuarios/58/estado` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "Usuario marcado como activo.",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Editado",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Carrera 70 # 30-20 Medellin",
     "telefono": "3011234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
@@ -2031,21 +2059,21 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
   "ok": true,
   "message": "Perfil actualizado.",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Perfil",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 10 # 20-30 Medellin",
     "telefono": "3021234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
@@ -2083,23 +2111,23 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "Inicio de sesión exitoso.",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjozOCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTE1MjM2M0BwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImVtcGxlYWRvIiwiaWRfcm9sIjoyLCJleHAiOjE3ODkyMzg3NjUsImlhdCI6MTc4OTE1MjM2NX0.LeWk6Hm3j9VAdxQjWqAzEFhOOtu9D8OADQJLznZgap4",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjo1OCwiZW1haWwiOiJjbGllbnRlLnRlc3Q4OTc1OTg2MEBwaG9uZXN0b3JlLmNvbSIsInJvbCI6ImVtcGxlYWRvIiwiaWRfcm9sIjoyLCJleHAiOjE3ODk4NDYyNjIsImlhdCI6MTc4OTc1OTg2Mn0.NoD5vU3QWvay0AX0MSiCyHE5crR7jfTw5iHc3llIjCI",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Perfil",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 10 # 20-30 Medellin",
     "telefono": "3021234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "activo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   }
 }
 ```
@@ -2152,7 +2180,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 82. Un cliente NO puede eliminar servicios
 
-`DELETE /api/servicios/25` → **403** (OK)
+`DELETE /api/servicios/31` → **403** (OK)
 
 ```json
 {
@@ -2163,7 +2191,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 83. El administrador elimina el servicio de prueba
 
-`DELETE /api/servicios/25` → **200** (OK)
+`DELETE /api/servicios/31` → **200** (OK)
 
 ```json
 {
@@ -2175,7 +2203,7 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 84. El producto con ventas se desactiva en vez de borrarse
 
-`DELETE /api/productos/32` → **200** (OK)
+`DELETE /api/productos/38` → **200** (OK)
 
 > Protege el histórico de ventas
 
@@ -2183,12 +2211,13 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 {
   "ok": true,
   "message": "El producto tiene ventas registradas, por eso se desactivó en lugar de eliminarse (así no se pierde el histórico).",
+  "desactivado": true,
   "producto": {
-    "id_producto": 32,
-    "nombre": "Producto Test 89152363 editado",
+    "id_producto": 38,
+    "nombre": "Producto Test 89759860 editado",
     "marca": "MarcaTest",
-    "id_categoria": 38,
-    "categoria": "Categoria Test 89152363 editada",
+    "id_categoria": 49,
+    "categoria": "Categoria Test 89759860 editada",
     "descripcion": "Descripción actualizada por las pruebas",
     "precio": 450000.0,
     "precio_anterior": null,
@@ -2198,16 +2227,15 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
     "destacado": true,
     "imagen_url": "/img/iphone-17.webp",
     "estado": "inactivo",
-    "creado_en": "2026-09-11 13:46:04",
-    "actualizado_en": "2026-09-11 13:46:05"
-  },
-  "desactivado": true
+    "creado_en": "2026-09-18 14:31:01",
+    "actualizado_en": "2026-09-18 14:31:02"
+  }
 }
 ```
 
 ### 85. No se puede borrar una categoría con productos
 
-`DELETE /api/categorias/38` → **409** (OK)
+`DELETE /api/categorias/49` → **409** (OK)
 
 ```json
 {
@@ -2218,28 +2246,28 @@ Estas pruebas se ejecutan con `python -m tests.pruebas_api` y recorren todos los
 
 ### 86. El usuario con pedidos se desactiva en vez de borrarse
 
-`DELETE /api/usuarios/38` → **200** (OK)
+`DELETE /api/usuarios/58` → **200** (OK)
 
 ```json
 {
   "ok": true,
   "message": "El usuario tiene pedidos registrados, por eso se desactivó en lugar de eliminarse (así no se pierde el histórico de ventas).",
   "usuario": {
-    "id_usuario": 38,
+    "id_usuario": 58,
     "nombre": "Cliente",
     "apellido": "Perfil",
     "tipo_documento": "CC",
-    "numero_documento": "189152363",
+    "numero_documento": "189759860",
     "direccion": "Calle 10 # 20-30 Medellin",
     "telefono": "3021234567",
-    "email": "cliente.test89152363@phonestore.com",
+    "email": "cliente.test89759860@phonestore.com",
     "email_verificado": false,
     "doble_factor": false,
     "estado": "inactivo",
     "id_rol": 2,
     "rol": "empleado",
-    "creado_en": "2026-09-11 13:46:03",
-    "actualizado_en": "2026-09-11 13:46:05"
+    "creado_en": "2026-09-18 14:31:00",
+    "actualizado_en": "2026-09-18 14:31:02"
   },
   "desactivado": true
 }
