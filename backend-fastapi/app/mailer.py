@@ -1,18 +1,26 @@
 # Envío de correos del sistema: verificación de la cuenta, código del
 # segundo paso del login y recuperación de contraseña.
 #
-# Funciona en dos modos, según lo que haya en .env:
+# Funciona en tres modos, según lo que haya en .env, en este orden:
 #
-#   1. SMTP configurado (SMTP_HOST, SMTP_USER, SMTP_PASSWORD):
-#      el correo se envía de verdad al usuario.
+#   1. RESEND_API_KEY configurada:
+#      el correo sale por la API HTTPS de Resend (https://resend.com).
+#      Es el modo recomendado para producción: plataformas como Railway
+#      bloquean las conexiones SMTP salientes (puertos 25/465/587) como
+#      medida antispam, así que un Gmail u otro proveedor por SMTP nunca
+#      llega a conectar ahí, aunque las credenciales sean correctas. Al
+#      viajar por HTTPS (puerto 443), Resend sí atraviesa ese bloqueo.
 #
-#   2. SMTP no configurado (caso habitual en desarrollo):
+#   2. SMTP configurado (SMTP_HOST, SMTP_USER, SMTP_PASSWORD):
+#      funciona en local o en cualquier host que no bloquee SMTP.
+#
+#   3. Ninguno de los dos configurado (caso habitual en desarrollo):
 #      el mensaje se imprime en la consola del backend y se guarda en
 #      backend-fastapi/correos_enviados.log.
 #
-# En ninguno de los dos casos el enlace o el código viajan en la
-# respuesta HTTP: si lo hicieran, cualquiera podría pedir el enlace de
-# otra persona desde el navegador y tomar su cuenta.
+# En ningún caso el enlace o el código viajan en la respuesta HTTP: si lo
+# hicieran, cualquiera podría pedir el enlace de otra persona desde el
+# navegador y tomar su cuenta.
 
 import os
 import smtplib
@@ -21,10 +29,14 @@ from datetime import datetime
 from email.message import EmailMessage
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks
 
 load_dotenv()
+
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+RESEND_FROM = os.getenv("RESEND_FROM", "PhoneStore <onboarding@resend.dev>").strip()
 
 SMTP_HOST = os.getenv("SMTP_HOST", "").strip()
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587") or 587)
@@ -49,6 +61,10 @@ DOMINIOS_SIN_ENVIO = tuple(
 LOG_PATH = Path(__file__).resolve().parent.parent / "correos_enviados.log"
 
 
+def resend_configurado() -> bool:
+    return bool(RESEND_API_KEY)
+
+
 def smtp_configurado() -> bool:
     """Basta con el host: usuario y contraseña solo hacen falta si el
     servidor los exige (los de pruebas en localhost no lo hacen)."""
@@ -60,8 +76,8 @@ def es_dominio_de_pruebas(destinatario: str) -> bool:
     return dominio in DOMINIOS_SIN_ENVIO
 
 
-def _registrar_en_log(destinatario: str, asunto: str, cuerpo: str, enviado: bool):
-    marca = "ENVIADO POR SMTP" if enviado else "NO ENVIADO (SMTP sin configurar)"
+def _registrar_en_log(destinatario: str, asunto: str, cuerpo: str, enviado: bool, medio: str = ""):
+    marca = f"ENVIADO POR {medio}" if enviado else "NO ENVIADO (sin proveedor de correo configurado)"
     bloque = (
         f"\n{'=' * 70}\n"
         f"[{datetime.now().isoformat(sep=' ', timespec='seconds')}] {marca}\n"
@@ -77,17 +93,30 @@ def _registrar_en_log(destinatario: str, asunto: str, cuerpo: str, enviado: bool
     print(bloque)
 
 
-def enviar_correo(destinatario: str, asunto: str, cuerpo: str, html: str = "") -> bool:
-    """Devuelve True si el correo salió por SMTP, False si solo se registró.
-
-    `cuerpo` es la versión en texto plano y siempre viaja: es la que se ve
-    en los clientes que no muestran HTML y la que queda en el registro.
-    `html` es opcional y se adjunta como alternativa con formato.
-    """
-    if not smtp_configurado() or es_dominio_de_pruebas(destinatario):
-        _registrar_en_log(destinatario, asunto, cuerpo, enviado=False)
+def _enviar_por_resend(destinatario: str, asunto: str, cuerpo: str, html: str) -> bool:
+    try:
+        respuesta = httpx.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+            json={
+                "from": RESEND_FROM,
+                "to": [destinatario],
+                "subject": asunto,
+                "text": cuerpo,
+                **({"html": html} if html else {}),
+            },
+            timeout=15,
+        )
+        if respuesta.status_code >= 400:
+            print(f"❌ Resend rechazó el correo a {destinatario}: {respuesta.status_code} {respuesta.text}")
+            return False
+        return True
+    except Exception as error:  # noqa: BLE001
+        print(f"❌ No se pudo enviar el correo (Resend) a {destinatario}: {error}")
         return False
 
+
+def _enviar_por_smtp(destinatario: str, asunto: str, cuerpo: str, html: str) -> bool:
     mensaje = EmailMessage()
     mensaje["From"] = SMTP_FROM
     mensaje["To"] = destinatario
@@ -103,12 +132,38 @@ def enviar_correo(destinatario: str, asunto: str, cuerpo: str, html: str = "") -
             if SMTP_USER and SMTP_PASSWORD:
                 servidor.login(SMTP_USER, SMTP_PASSWORD)
             servidor.send_message(mensaje)
-        _registrar_en_log(destinatario, asunto, cuerpo, enviado=True)
         return True
     except Exception as error:  # noqa: BLE001
-        print(f"❌ No se pudo enviar el correo a {destinatario}: {error}")
+        print(f"❌ No se pudo enviar el correo (SMTP) a {destinatario}: {error}")
+        return False
+
+
+def enviar_correo(destinatario: str, asunto: str, cuerpo: str, html: str = "") -> bool:
+    """Devuelve True si el correo salió de verdad, False si solo se registró.
+
+    Prueba Resend primero (funciona detrás del bloqueo SMTP de Railway y
+    plataformas similares), y si no está configurado cae a SMTP clásico.
+
+    `cuerpo` es la versión en texto plano y siempre viaja: es la que se ve
+    en los clientes que no muestran HTML y la que queda en el registro.
+    `html` es opcional y se adjunta como alternativa con formato.
+    """
+    if es_dominio_de_pruebas(destinatario):
         _registrar_en_log(destinatario, asunto, cuerpo, enviado=False)
         return False
+
+    if resend_configurado():
+        enviado = _enviar_por_resend(destinatario, asunto, cuerpo, html)
+        _registrar_en_log(destinatario, asunto, cuerpo, enviado=enviado, medio="RESEND")
+        return enviado
+
+    if smtp_configurado():
+        enviado = _enviar_por_smtp(destinatario, asunto, cuerpo, html)
+        _registrar_en_log(destinatario, asunto, cuerpo, enviado=enviado, medio="SMTP")
+        return enviado
+
+    _registrar_en_log(destinatario, asunto, cuerpo, enviado=False)
+    return False
 
 
 def enviar_en_segundo_plano(
@@ -131,11 +186,12 @@ def enviar_en_segundo_plano(
     mirando la pantalla, esperando el código, y conviene saber en el acto
     si el envío falló.
 
-    Devuelve si hay SMTP configurado; el resultado del envío se conoce
-    después y queda en `correos_enviados.log`.
+    Devuelve si hay algún proveedor de correo configurado (Resend o SMTP);
+    el resultado real del envío se conoce después y queda en
+    `correos_enviados.log`.
     """
     tareas.add_task(enviar_correo, destinatario, asunto, cuerpo, html)
-    return smtp_configurado()
+    return resend_configurado() or smtp_configurado()
 
 
 # ---------------------------------------------------------------
