@@ -374,7 +374,8 @@ function AdminUsuarios() {
                             value={String(u.id_rol)}
                             onChange={(e) => cambiarRol(u, e.target.value)}
                             aria-label={`Rol de ${u.nombre}`}
-                            className="rounded-lg border border-white/10 px-2 py-1.5 text-xs font-semibold text-white/80 outline-none transition-colors focus:border-brand-500"
+                            style={{ colorScheme: "dark" }}
+                            className="rounded-lg border border-white/10 bg-dark-900 px-2 py-1.5 text-xs font-semibold text-white/80 outline-none transition-colors focus:border-brand-500"
                           >
                             {ROLES.map((r) => (
                               <option key={r.value} value={r.value}>

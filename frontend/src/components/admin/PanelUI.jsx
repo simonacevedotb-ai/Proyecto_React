@@ -161,6 +161,7 @@ export function SelectorFiltro({ value, onChange, options, ariaLabel }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={ariaLabel}
+        style={{ colorScheme: "dark" }}
         className="h-11 appearance-none rounded-xl border border-white/10 bg-dark-900 pl-4 pr-9 text-sm font-medium text-white/80 outline-none transition-colors focus:border-brand-500"
       >
         {options.map((o) => (

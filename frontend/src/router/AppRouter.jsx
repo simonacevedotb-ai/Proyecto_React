@@ -131,24 +131,24 @@ function AppRouter() {
             }
           />
 
-          {/* Área privada del cliente (mantiene el encabezado de la tienda) */}
-          <Route
-            path="/cliente"
-            element={
-              <ProtectedRoute roles={TODOS_LOS_ROLES}>
-                <ClienteLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<ClienteResumen />} />
-            <Route path="pedidos" element={<MisPedidos />} />
-            <Route path="facturas" element={<MisFacturas />} />
-            <Route path="pqr" element={<MisPQR />} />
-            <Route path="solicitudes" element={<MisSolicitudes />} />
-            <Route path="perfil" element={<MiPerfil />} />
-          </Route>
-
           <Route path="*" element={<NoEncontrada />} />
+        </Route>
+
+        {/* ---------- Área privada del cliente (entorno propio) ---------- */}
+        <Route
+          path="/cliente"
+          element={
+            <ProtectedRoute roles={TODOS_LOS_ROLES}>
+              <ClienteLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ClienteResumen />} />
+          <Route path="pedidos" element={<MisPedidos />} />
+          <Route path="facturas" element={<MisFacturas />} />
+          <Route path="pqr" element={<MisPQR />} />
+          <Route path="solicitudes" element={<MisSolicitudes />} />
+          <Route path="perfil" element={<MiPerfil />} />
         </Route>
 
         {/* ---------- Panel administrativo (entorno propio) ---------- */}

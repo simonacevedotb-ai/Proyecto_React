@@ -32,6 +32,7 @@ function Select({
           onBlur={onBlur}
           disabled={disabled}
           aria-invalid={!!error}
+          style={{ colorScheme: "dark" }}
           className={`
             w-full appearance-none rounded-xl border bg-dark-900 px-4 py-3 pr-10 text-sm
             text-white outline-none transition-all duration-200

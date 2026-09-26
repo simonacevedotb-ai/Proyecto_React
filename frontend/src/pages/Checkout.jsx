@@ -216,7 +216,7 @@ function Checkout() {
           </span>
 
           <h1 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            ¡Gracias por tu compra!
+            ¡Gracias por tu pedido!
           </h1>
           <p className="mb-1 text-sm text-white/50">Tu número de pedido es</p>
           <p className="mb-6 text-3xl font-bold tracking-wide text-brand-500">

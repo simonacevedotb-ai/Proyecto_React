@@ -353,6 +353,7 @@ function Productos() {
                     value={filtros.orden}
                     onChange={(e) => aplicarFiltro({ orden: e.target.value })}
                     aria-label="Ordenar productos"
+                    style={{ colorScheme: "dark" }}
                     className="h-12 w-full appearance-none rounded-xl border border-white/10 bg-dark-900 pl-4 pr-10 text-sm font-medium outline-none transition-colors focus:border-brand-500 sm:w-56"
                   >
                     {ORDENES.map((o) => (

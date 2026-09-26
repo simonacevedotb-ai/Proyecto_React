@@ -297,7 +297,8 @@ function AdminVentas() {
                                 e.target.value && setCambio({ venta: v, estado: e.target.value })
                               }
                               aria-label={`Cambiar estado del pedido ${v.codigo}`}
-                              className="rounded-lg border border-white/10 px-2 py-1.5 text-xs font-semibold text-white/60 outline-none transition-colors focus:border-brand-500"
+                              style={{ colorScheme: "dark" }}
+                              className="rounded-lg border border-white/10 bg-dark-900 px-2 py-1.5 text-xs font-semibold text-white/60 outline-none transition-colors focus:border-brand-500"
                             >
                               <option value="">Cambiar a...</option>
                               {siguientes.map((s) => (
